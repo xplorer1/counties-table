@@ -39,20 +39,22 @@ app.use(function(req, res, next) {
     next();
 });
 
-let AppRoutes = require('./app/routes/AppRoutes');
+let OrderRoutes = require('./app/routes/OrderRoutes');
+let UserRoutes = require('./app/routes/UserRoutes');
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
     next(); 
 });
 
-app.use("/api", AppRoutes);
+app.get("/", function(req, res, next) {
+    return res.send("App properly hosted.");
+})
+
+app.use("/api/order", OrderRoutes);
+app.use("/api/user", UserRoutes);
 
 app.use(express.static(path.join(__dirname, 'build')));
-
-// app.get('*', function(req, res) {
-//     res.sendFile(path.join(__dirname + '/build/index.html'));
-// });
 
 app.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist' });
