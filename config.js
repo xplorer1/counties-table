@@ -1,5 +1,5 @@
 module.exports = {
-    'port': process.env.PORT || 9000,
+    'port': process.env.PORT || 80,
 
     'baseurl': "",
     'database' : 'mongodb://stdbadmin:500b3A5exi6spHci@cluster0-shard-00-00-kd4uv.mongodb.net:27017,cluster0-shard-00-01-kd4uv.mongodb.net:27017,cluster0-shard-00-02-kd4uv.mongodb.net:27017/staging_adb_plus?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority',
