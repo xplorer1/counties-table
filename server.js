@@ -60,4 +60,4 @@ app.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist' });
 });
 
-app.listen(config.port, () => console.log(`Listening on port ${config.port}!`))
+app.listen(config.port, () => console.log(`Magic happening on port ${config.port}!`))
