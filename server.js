@@ -41,6 +41,7 @@ app.use(function(req, res, next) {
 
 let OrderRoutes = require('./app/routes/OrderRoutes');
 let UserRoutes = require('./app/routes/UserRoutes');
+let AuthRoutes = require('./app/routes/AuthRoutes');
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -49,15 +50,14 @@ app.use(function(req, res, next) {
 
 app.get("/", function(req, res, next) {
     return res.send("App properly hosted.");
-})
+});
 
 app.use("/api/order", OrderRoutes);
 app.use("/api/user", UserRoutes);
-
-app.use(express.static(path.join(__dirname, 'build')));
+app.use("/api/auth", AuthRoutes);
 
 app.use(function(req, res) {
-    return res.status(404).send({ message: 'The url you visited does not exist' });
+    return res.status(404).send({ message: 'The url you visited does not exist.' });
 });
 
 app.listen(config.port, () => console.log(`Magic happening on port ${config.port}!`))

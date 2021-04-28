@@ -133,14 +133,6 @@ module.exports = {
         });
     },
 
-    confirmInboundNexmoMessage: async function(req, res) {
-        return res.send(200);
-    },
-
-    confirmNexmoMessageStatus: async function(req, res) {
-        return res.send(200);
-    },
-
     initiatePaystackTransaction: async function(req, res) {
 
         if(!req.body.amount) return res.status(400).json({data: "amount required."});
