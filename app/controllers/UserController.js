@@ -69,7 +69,7 @@ module.exports = {
             await new_user.save();
 
             let text = "To activate your account, please verify your phone number by typing this verification code into your sign up form " + verification_code;
-            //messenger.sendVonageSms(req.body.phone.replace("0", "234"), text);
+            messenger.sendVonageSms(req.body.phone.replace("0", "234"), text);
 
             return res.status(200).json({message: "Account created!"});
 
