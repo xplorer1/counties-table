@@ -12,14 +12,20 @@ var imageId = function () {
     return Math.random().toString(36).substr(2, 4);
 };
 
+//application_id: 2cc80ce9-7555-4a3c-93e3-34bf9569b95c
+
+//master_key: 6232d907
+
+//ap_secret: 
+
 // -----BEGIN PUBLIC KEY-----
-// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA73Ylr7kMuUclJgCI2DBY
-// BpHjqiKNKUu0zJoZQo3UhH1et8+0LstuD3KtDEIVCPfpTSU/dtALPSm+l97GzlN/
-// /PWBARMyx8QaCP/Zrk6BJhi7frSGm/FJ8qEg0lKoeIZKGhXWP/yIHFwiRISx4Vww
-// R/BHq3G15siSGP6zebLTomH8LbbVXLFj2t1VWi7YQJQa0VvysltoRQiDEA7k1kHe
-// wI1cm3trtVvuS/1AFl+hgumm3Zi0iBo3EY4DqytX4kQf9COu85kRras7sZQ1tkOE
-// faF5sZC4D2TKqjsryIQ8tdxMjypk3l15KrrWvJe/0n2vXmZmc1fZC6wgRPmjYCni
-// kQIDAQAB
+// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxeXOHKlRnu7EYEbNtZyJ
+// HZWgq/CL/xjj20lbnQLckf4sOx3F/kgVHxR/T9YImBmqJ2Ym0JtW+vyVJ1kSa8+I
+// g/x7cWV4UdQClTFdlE2oKThqFQKoP04YazPIf8+9tha+LjELB2bRfD7vzkjU8RgQ
+// 47KPul4F2Mek8gMme5ctTY6NfbvTIgSIigQauL2AbjRfXLmP1MixsrOPxrvmcgjl
+// 1WNz80K7gEzB4yAj+xpAbABFN5mRLRMK0m/Wujcr+LzxVCjZL/VH4tBiaRQFhk3B
+// 2friARX+KPjlZAhq48bA7VXDqc3zCIU3NXXGokjmVbsnjo2Rup+4/Yw0FeBB5vbD
+// dQIDAQAB
 // -----END PUBLIC KEY-----
 
 module.exports = {

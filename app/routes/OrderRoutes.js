@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var AppController = require('../controllers/AppController');
+var OrderController = require('../controllers/OrderControler');
 
 var middlewares = require("../utils/middleware.js");
 
-router.post('/auth/sign_in', AppController.login);
+router.post('/auth/sign_in', OrderController.login);
 
-router.post('/customer', AppController.signUpCustomer);
+router.post('/customer', OrderController.signUpCustomer);
 
-router.post('/restaurant', AppController.signUpRestaurant);
+router.post('/restaurant', OrderController.signUpRestaurant);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist' });

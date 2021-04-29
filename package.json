@@ -15,7 +15,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/adbasadorplus-devs/adbasador-plus-be#readme",
   "dependencies": {
-    "@vonage/server-sdk": "^2.10.8",
+    "@vonage/server-sdk": "^2.10.7-beta-2",
     "africastalking": "^0.5.3",
     "aws-sdk": "^2.702.0",
     "axios": "^0.19.2",
