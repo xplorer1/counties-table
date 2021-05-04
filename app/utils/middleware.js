@@ -30,7 +30,7 @@ const middlewares = {
                 } else {
                     let obj = {};
                     obj.token = token;
-                    obj.email = verified.email;
+                    obj.phone = verified.phone;
                     obj.role = verified.role;
                     req.verified = obj;
 

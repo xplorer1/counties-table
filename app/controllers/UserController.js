@@ -2,14 +2,30 @@ const Customer = require('../models/CustomersModel');
 const RestaurantModel = require('../models/RestaurantModel');
 const UserModel = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
+const MenuModel = require('../models/MenuModel');
+
+const fs = require("fs");
+const util = require("util");
+const unLinkFile = util.promisify(fs.unlink);
 
 const config = require('../../config');
 const uuid = require('node-uuid');
 const messenger = require('../utils/messenger');
+const AWS = require('aws-sdk');
 
 var imageId = function () {
-    return Math.random().toString(36).substr(2, 4);
+    return Math.random().toString(36).substr(2, 10);
 };
+
+var s3 = new AWS.S3({
+    accessKeyId: config.aws_s3.ACCESS_KEY_ID,
+    secretAccessKey: config.aws_s3.SECRET_ACCESS_KEY,
+    Bucket: config.aws_s3.BUCKET_NAME,
+    apiVersion: '2006-03-01',
+    region: config.aws_s3.region,
+    ACL : "public-read",
+    grantee : "Everyone"
+});
 
 module.exports = {
 
@@ -81,7 +97,7 @@ module.exports = {
         }
     },
 
-    getRestaurants: async function(req, res) {
+    listRestaurants: async function(req, res) {
         try {
             let restaurants = await RestaurantModel.find({}).exec();
             return res.status(200).json({data: restaurants, status: 200});
@@ -99,6 +115,118 @@ module.exports = {
             if(!restaurant) return res.status(404).json({message: "Restaurant not found"});
 
             return res.status(200).json({data: restaurant, status: 200});
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
+
+    updateRestaurant: async function(req, res) {
+        try {
+            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+
+            let user = await UserModel.findOne({phone: restaurant.phone}).exec();
+
+            var profile_id = req.body.business_name.replace(/ /g, '') + "_" + uuid.v4();
+
+            restaurant.email = req.body.email ? req.body.email : restaurant.email;
+            restaurant.business_name = req.body.business_name ? req.body.business_name : restaurant.business_name;
+            restaurant.first_name = req.body.first_name ? req.body.first_name : restaurant.first_name;
+            restaurant.last_name = req.body.last_name ? req.body.last_name : restaurant.last_name;
+            restaurant.address = req.body.address ? req.body.address : restaurant.address;
+            restaurant.phone = req.body.phone ? req.body.phone.replace("0", "234") : restaurant.phone;
+            restaurant.streameats_id = profile_id;
+            restaurant.streameats_link = config.base_url + "/" + profile_id;
+            restaurant.whatsapp_link = "https://web.whatsapp.com/send?phone=" + req.body.phone.replace("0", "234");
+
+            await restaurant.save();
+
+            user.phone = req.body.phone ? req.body.phone.replace("0", "234") : user.phone;
+
+            await user.save();
+
+            return res.status(200).json({message: "Account updated!"});
+
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
+
+    getRestaurant: async function(req, res) {
+        try {
+            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+
+            let menus = await MenuModel.find({restaurant: restaurant._id}).exec();
+
+            return res.status(200).json({restaurant: restaurant, menus: menus});
+
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
+
+    updateRestaurantAttachments: async function (req, res) {
+        if(!req.body.image_type) return res.status(400).json({message: "Image type is required."});
+        if(req.body.image_type !== "cover_image" && req.body.image_type !== "profile_image") return res.status(400).json({message: "Image type must be cover_image or profile_image."});
+
+        try {
+
+            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+
+            let file_stream = fs.createReadStream(req.file.path);
+
+            const params = {
+                Bucket: config.aws_s3.BUCKET_NAME,
+                Key: imageId(), //config.env + "/" + req.body.image_type + "/" + imageId() + req.file.originalname,
+                Body: file_stream
+            };
+
+            s3.upload(params, async function(err, data) {
+                if (err) {
+                    return res.status(500).json({status: 500, message: err.message});
+                }
+
+                restaurant[req.body.image_type] = data.key;
+                restaurant.save();
+
+                await unLinkFile(req.file.path);
+                
+                return res.status(200).json({message: "File uploaded successfully."});
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
+
+    fetchAttachment: async function(req, res) {
+        try {
+            let params = {
+                Bucket: config.aws_s3.BUCKET_NAME,
+                Key: req.params.attachment_id
+            };
+
+            let read_stream = s3.getObject(params, function(err, data) {
+                if (err) {
+                    return res.status(500).json({status: 500, message: err.message});
+                }
+            }).createReadStream();
+
+            return read_stream.pipe(res);
+
         } catch (error) {
             return res.status(500).json({
                 message: error.message,

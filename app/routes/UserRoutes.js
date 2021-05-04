@@ -3,12 +3,18 @@ var router = express.Router();
 var UserController = require('../controllers/UserController');
 
 var middlewares = require("../utils/middleware.js");
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'}); //for handling multipart form data.
 
-//router.post('/customer', AppController.signUpCustomer);
-
-router.route('/restaurant')
+router.route('/')
     .post(UserController.signUpRestaurant)
-    .get(UserController.getRestaurants)
+    .get(middlewares.checkToken, UserController.getRestaurant)
+    .put(middlewares.checkToken, UserController.updateRestaurant);
+
+router.post('/attachments', middlewares.checkToken, upload.single('image'), UserController.updateRestaurantAttachments);
+router.get('/attachments/:attachment_id', UserController.fetchAttachment);
+
+router.get('/restaurants', UserController.listRestaurants);
 
 router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEatsId);
 

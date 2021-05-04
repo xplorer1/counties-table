@@ -42,6 +42,7 @@ app.use(function(req, res, next) {
 let OrderRoutes = require('./app/routes/OrderRoutes');
 let UserRoutes = require('./app/routes/UserRoutes');
 let AuthRoutes = require('./app/routes/AuthRoutes');
+let MenuRoutes = require('./app/routes/MenuRoutes');
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -55,9 +56,12 @@ app.get("/", function(req, res, next) {
 app.use("/api/order", OrderRoutes);
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
+app.use("/api/menu", MenuRoutes);
 
 app.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });
 });
+
+//config.private_ip_address,
 
 app.listen(config.port, () => console.log(`Magic happening on port ${config.port}!`))

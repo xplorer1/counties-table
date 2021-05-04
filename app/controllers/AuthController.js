@@ -47,7 +47,7 @@ module.exports = {
      * @returns {object} success or error response object.
      */
 
-     verifySignUpCode: async function (req, res) {
+    verifySignUpCode: async function (req, res) {
         if(!req.body.verification_code) return res.status(400).json({status: 400, message: "Code is required."});
         if(!req.body.phone) return res.status(400).json({status: 400, message: "Phone is required."});
 
@@ -111,7 +111,7 @@ module.exports = {
 
             user.save();
 
-            var token = jwt.sign({phone: req.body.phone}, config.secret, {
+            var token = jwt.sign({phone: req.body.phone.replace("0", "234")}, config.secret, {
                 expiresIn: 432000 // expires in 5 days
             });
 
