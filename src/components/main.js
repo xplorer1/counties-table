@@ -1,4 +1,5 @@
 import React from 'react';
+import NProgress from 'nprogress';
 
 class Main extends React.Component {
     constructor(props) {
@@ -10,6 +11,8 @@ class Main extends React.Component {
     }
 
     fetchTableData = async () => {
+        NProgress.inc();
+
         try {
             let url = "https://restcountries.eu/rest/v2/all";
             let response = await fetch(url);
@@ -17,6 +20,8 @@ class Main extends React.Component {
             let countries = await response.json(); // read response body and parse as JSON
 
             this.setState({countries: countries});
+
+            NProgress.done();
 
         } catch (error) {
             window.alert("There has been an error: ", error.message);
