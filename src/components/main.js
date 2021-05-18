@@ -1,5 +1,6 @@
 import React from 'react';
 import NProgress from 'nprogress';
+import store from "store";
 
 class Main extends React.Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class Main extends React.Component {
             let countries = await response.json(); // read response body and parse as JSON
 
             this.setState({countries: countries});
+            store.set("countries", countries);
 
             NProgress.done();
 
@@ -29,11 +31,34 @@ class Main extends React.Component {
         }
     };
 
+    searchCountryData = (e) => {
+
+        let searchquery = e.target.value.toLowerCase();
+
+        if(searchquery) {
+            let newlist = store.get("countries").filter((el) => {
+                return el.name.toLowerCase().includes(searchquery) || el.capital.toLowerCase().includes(searchquery) || 
+                    el.demonym.toLowerCase().includes(searchquery) || el.subregion.toLowerCase().includes(searchquery); 
+                    el.region.toLowerCase().includes(searchquery);
+            })
+
+            this.setState({countries: newlist});
+
+        } else {
+            this.setState({countries: store.get("countries")});
+        }
+    };
+
     render() {
         return (
             <article>
                 <div className="table-wrapper">
-                <h2 className="w3-display w3-text-black">LIST OF COUNTRIES AND THIER META DATA</h2>
+                    <h2 className="w3-display w3-text-black">LIST OF COUNTRIES AND THIER META DATA</h2>
+
+                    <div className="w3-half">
+                        <label className="w3-text-black w3-margin">Seach the table below</label>
+                        <input onChange={this.searchCountryData} className="w3-input w3-border w3-margin-left w3-margin-top w3-margin-bottom" type="search" placeholder="Search by country name, capital, native name, demonym, region, subregion..." />
+                    </div>
 
                     <table className="fl-table">
                         <thead>
