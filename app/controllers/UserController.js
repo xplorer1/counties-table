@@ -3,6 +3,7 @@ const RestaurantModel = require('../models/RestaurantModel');
 const UserModel = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
 const MenuModel = require('../models/MenuModel');
+const PreSignUpModel = require("../models/PreSignUpModel");
 
 const fs = require("fs");
 const util = require("util");
@@ -28,6 +29,42 @@ var s3 = new AWS.S3({
 });
 
 module.exports = {
+
+    preSignUp: async function(req, res) {
+        try {
+            let existing_restaurant = await PreSignUpModel.findOne({email: req.body.email}).exec();
+            if(existing_restaurant) return res.status(409).json({status: 409, message: 'Email already registered.'});
+
+            let new_restaurant = new PreSignUpModel({
+                email: req.body.email,
+                created_on: new Date()
+            });
+
+            await new_restaurant.save();
+
+            return res.status(200).json({status: 200, message: "Account created!"});
+
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
+
+    getPreSignUps: async function(req, res) {
+        try {
+
+            let restaurants = await PreSignUpModel.find({}).exec();
+            return res.status(200).json({data: restaurants, status: 200});
+
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
+        }
+    },
 
     signUpRestaurant: async function(req, res) {
         if(!req.body.email) {
@@ -57,7 +94,6 @@ module.exports = {
 
         try {
             let existing_restaurant = await RestaurantModel.findOne({$or : [{email: req.body.email}, {phone: req.body.phone}]}).exec();
-
             if(existing_restaurant) return res.status(409).json({status: 409, message: 'Email or phone number already registered.'});
 
             var profile_id = req.body.business_name.replace(/ /g, '') + "_" + uuid.v4(), verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();;

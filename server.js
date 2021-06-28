@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express();
+const serverless = require('serverless-http');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const appstorage = require("./app/utils/nodepersist");
-const cron = require('node-cron');
 
 let mongoose = require('mongoose'); // for working w/ our database
 let config = require('./config');
@@ -64,4 +64,5 @@ app.use(function(req, res) {
 
 //config.private_ip_address,
 
+//module.exports.handler = serverless(app);
 app.listen(config.port, () => console.log(`Magic happening on port ${config.port}!`))

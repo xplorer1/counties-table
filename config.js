@@ -25,9 +25,14 @@ module.exports = {
         "GRANTEE": ""
     },
 
-    "database": "mongodb://localhost:27017/streameats",
+    "aws_cli": {
+        "ACCESS_KEY_ID" : "AKIARXBKP6BORGKYNUMF",
+        "SECRET_KEY_ACCESS_KEY" : "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"
+    },
 
-    //'database' : 'mongodb+srv://phantom-admin:Pe4NFrsQFz2Pv2pX@cluster0.08uuj.mongodb.net/streameats?retryWrites=true&w=majority',
+    "database": "mongodb://localhost:27017/streameats", //for production
+
+    //'database' : 'mongodb+srv://phantom-admin:Pe4NFrsQFz2Pv2pX@cluster0.08uuj.mongodb.net/streameats?retryWrites=true&w=majority', //for testing.
 
     "secret": "*KUITUR!GJ@L8BV9*4*JVLY$&*CCD!O$RTRD2$4U)HPUL!UG)XR(6&AWIMYG4B(6&Q3L&YDLJFJ*P1S4HJA$T$4*X2HC80WGF3VOT1!AMDNM6LQ1G6YXMRB@%3K2$30MOP7*X5WCF$(@IUA*52I1P(KVRIO807J^8G7$XFH!P(0EV#HJF1X&4#VB5XWVJTTD)STWV6R$IYS6&%V80D9VL0M#N79%XR3BP&S$1C4IWU20W6U6HST5S32($S%8&06X)VOR!*^QTONN*FYPOP3#@UM5^2)C81MK9TK!14LQFO7!",
     "env" : "development",

@@ -11,6 +11,10 @@ router.route('/')
     .get(middlewares.checkToken, UserController.getRestaurant)
     .put(middlewares.checkToken, UserController.updateRestaurant);
 
+router.route('/pre_sign_up')
+    .post(UserController.preSignUp)
+    .get(UserController.getPreSignUps)
+
 router.post('/attachments', middlewares.checkToken, upload.single('image'), UserController.updateRestaurantAttachments);
 router.get('/attachments/:attachment_id', UserController.fetchAttachment);
 
