@@ -1,5 +1,5 @@
 module.exports = {
-    "port": process.env.PORT || 8080,
+    "port": process.env.PORT || 9000,
     "private_ip_address" : "172.31.20.237",
 
     "base_url": "http://ec2-18-191-242-77.us-east-2.compute.amazonaws.com",
