@@ -31,6 +31,10 @@ var s3 = new AWS.S3({
 module.exports = {
 
     preSignUp: async function(req, res) {
+        if(!req.body.email) {
+            return res.status(400).json({status: 400, message: "Email address is required."});
+        }
+        
         try {
             let existing_restaurant = await PreSignUpModel.findOne({email: req.body.email}).exec();
             if(existing_restaurant) return res.status(409).json({status: 409, message: 'Email already registered.'});
