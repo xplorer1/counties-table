@@ -1,0 +1,316 @@
+*{
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+    font-family: 'Mulish' , sans-serif;
+}
+
+body{
+    background-color: #62D4A6;
+}
+
+.congrats{
+    display: none;
+}
+
+
+.wrapper{
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    width: 100vw;
+    justify-content: space-around;
+    padding: 300px;
+}
+
+.congrats-wrapper{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    padding: 300px;
+}
+
+.body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.body h2{
+    font-size: 52px;
+    margin-bottom: 12px;
+    font-weight: bolder;
+}
+
+.body p{
+    color: white;
+    width: 350px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.left-wrap{
+    width: 50%;
+    flex-shrink: 0px;
+}
+
+.left-wrap h2{
+    font-size: 44px;
+    font-weight: bolder;
+    width: 600px;
+    line-height: 60px;
+    margin-bottom: 16px;
+}
+
+.left-wrap .info{
+    font-size: 20px;
+    width: 450px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.right-wrap{
+    width: 50%;
+    flex-shrink: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.address-btn{
+    border: 3px solid #191735;
+    padding: 11px 5px;
+    width: 500px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+}
+
+.address-btn input, .address-btn button{
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.address-btn input {
+    width: 380px;
+    padding: 0px 20px;
+    color: black;
+    font-size: 16px;
+}
+
+.address-btn input::placeholder{
+    color: white;
+}
+
+.address-btn button{
+    background-color: #FF7948;
+    padding: 12px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.right-btn{
+    font-size: 20px;
+}
+
+.logo img{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+}
+
+.wrapper .contacts{
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+    padding: 0px 60px;
+    text-align: right;
+}
+
+.congrats .contacts{
+    position: absolute;
+    top: 30px;
+    width: 100%;
+    padding: 0px 60px;
+    text-align: right;
+}
+
+.contacts ul li{
+    display: inline-block;
+}
+
+.contacts ul li:first-child{
+    margin-right: 25px;
+}
+
+.gift{
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+}
+
+@media(max-width:1550px){
+    .wrapper{
+        padding: 100px;
+    }
+}
+@media(max-width:1250px){
+    .wrapper{
+        padding: 50px;
+    }
+
+    .left-wrap{
+        width: 40%;
+    }
+
+    .left-wrap h2{
+        width: 100%;
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .right-wrap{
+        width: 60%;
+    }
+}
+
+@media(max-width:850px){
+    .wrapper{
+        display: block;
+        padding: 60px;
+        padding-top: 160px;
+        min-height: 100vh;
+        height: auto;
+        align-items: flex-start;
+    }
+
+    .congrats-wrapper{
+        border: 1px solid red;
+        padding-top: 200px;
+    }
+
+    .body h2{
+        font-size: 28px;
+        font-weight: bolder;
+    }
+
+
+    .body p{
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .wrapper .contacts{
+        text-align: center;
+        position: static;
+    }
+
+    .logo img{
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+
+    .contacts ul li a img{
+        width: 25px;
+        height: 25px;
+    }
+
+    .left-wrap{
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .left-wrap h2{
+        font-size: 28px;
+        width: 100%;
+        line-height: 40px;
+    }
+
+    .left-wrap .info{
+        font-size: 16px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .right-wrap{
+        width: 100%;
+        display: block;
+        margin-bottom: 30px;
+    }
+
+    .address-btn{
+        width: 100%;
+        padding: 9px 1px;
+    }
+
+    .address-btn input{
+        padding: 0px 15px;
+        width: 85%;
+        font-size: 15px;
+    }
+
+    .address-btn button{
+        padding: 8px 20px;
+    }
+
+    .right-btn{
+        text-align: right;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .gift img{
+        height: 200px;
+        width: 180px;
+    }
+}
+
+@media(max-width:550px) {
+    .wrapper{
+        padding: 16px;
+        padding-top: 60px;
+    }
+
+    .congrats-wrapper{
+        padding: 16px;
+    }
+
+    .address-btn input{
+        width: 75%;
+    }
+}
+
+@media(max-width:380px) {
+    .address-btn input{
+        width: 70%;
+        padding: 0px 8px;
+    }
+}
+
+@media(max-width:340px) {
+    .address-btn input{
+        width: 65%;
+        padding: 0px 8px;
+    }
+
+    .left-wrap h2{
+        font-size: 22px;
+        word-spacing: 0px;
+        line-height: 28px;
+    }
+
+    .left-wrap .info{
+        font-size: 15px;
+    }
+
+    .body p{
+        font-size: 16px;
+        width: 100%;
+    }
+}

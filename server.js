@@ -48,14 +48,19 @@ app.use(function(req, res, next) {
     next(); 
 });
 
-app.get("/", function(req, res, next) {
-    return res.send("App properly hosted.");
-});
+// app.get("/", function(req, res, next) {
+//     return res.send("App properly hosted.");
+// });
 
 app.use("/api/order", OrderRoutes);
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/menu", MenuRoutes);
+
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/build/index.html'));
+});
 
 app.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });
