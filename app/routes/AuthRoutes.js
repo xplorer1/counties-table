@@ -8,7 +8,7 @@ router.post('/verify_sign_up', AuthController.verifySignUpCode);
 
 router.post('/verify_sign_in', AuthController.verifySignInCode);
 
-router.post('/generate_token', AuthController.generateTwilioToken);
+router.post('/generate_token/:customer_phone', AuthController.generateTwilioToken);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });

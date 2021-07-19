@@ -143,7 +143,7 @@ module.exports = {
     */
 
     generateTwilioToken: async function(req, res) {
-        let identity = 'user';
+        let identity = req.params.customer_phone;
 
         // Create Video Grant
         const videoGrant = new VideoGrant();
