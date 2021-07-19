@@ -1,7 +1,4 @@
-const Customer = require('../models/CustomersModel');
-const Restaurant = require('../models/RestaurantModel');
 const UserModel = require('../models/UserModel');
-const TransactionJournal = require('../models/TransactionJournal');
 const messenger = require("../utils/messenger");
 
 const config = require('../../config');
@@ -9,6 +6,15 @@ const uuid = require('node-uuid');
 
 let jwt = require('jsonwebtoken');
 const RestaurantModel = require('../models/RestaurantModel');
+
+const AccessToken = require('twilio').jwt.AccessToken;
+const VideoGrant = AccessToken.VideoGrant;
+
+// Used when generating any kind of tokens
+// To set up environmental variables, see http://twil.io/secure
+const twilioAccountSid = config.twilio.ACCOUNT_SID;
+const twilioApiKey = config.twilio.API_KEY;
+const twilioApiSecret = config.twilio.API_SECRET;
 
 module.exports = {
 
@@ -45,7 +51,7 @@ module.exports = {
      * @param {verification_code} req object
      * @param {object} res object
      * @returns {object} success or error response object.
-     */
+    */
 
     verifySignUpCode: async function (req, res) {
         if(!req.body.verification_code) return res.status(400).json({status: 400, message: "Code is required."});
@@ -98,6 +104,13 @@ module.exports = {
         }
     },
 
+    /**
+     * 
+     * @param {verification_code} req object
+     * @param {object} res object
+     * @returns {object} success or error response object.
+    */
+
     verifySignInCode: async function(req, res) {
         if(!req.body.login_code) return res.status(400).json({status: 400, message: "Code is required."});
         if(!req.body.phone) return res.status(400).json({status: 400, message: "Phone is required."});
@@ -122,13 +135,34 @@ module.exports = {
         }
     },
 
-    confirmInboundNexmoMessage: async function(req, res) {
-        console.log("res: ", req.body);
-        return res.send(200);
-    },
+    /**
+     * 
+     * @param {verification_code} req object
+     * @param {object} res object
+     * @returns {object} success or error response object.
+    */
 
-    confirmNexmoMessageStatus: async function(req, res) {
-        console.log("res: ", req.body);
-        return res.send(200);
+    generateTwilioToken: async function(req, res) {
+        let identity = 'user';
+
+        // Create Video Grant
+        const videoGrant = new VideoGrant();
+
+        // Create an access token which we will sign and return to the client,
+        // containing the grant we just created
+        let token = new AccessToken(
+            twilioAccountSid,
+            twilioApiKey,
+            twilioApiSecret,
+            {identity: identity}
+        );
+
+        token.addGrant(videoGrant);
+
+        // Serialize the token to a JWT string
+
+        token = token.toJwt();
+
+        return res.status(200).json({data: token});
     },
 }

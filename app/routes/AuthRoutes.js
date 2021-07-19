@@ -8,9 +8,7 @@ router.post('/verify_sign_up', AuthController.verifySignUpCode);
 
 router.post('/verify_sign_in', AuthController.verifySignInCode);
 
-router.post('/nexmo/inbound', AuthController.confirmInboundNexmoMessage);
-
-router.post('/nexmo/status', AuthController.confirmNexmoMessageStatus); 
+router.post('/generate_token', AuthController.generateTwilioToken);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });

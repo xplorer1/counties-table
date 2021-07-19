@@ -1,6 +1,5 @@
 module.exports = {
     "port": process.env.PORT || 9000,
-    "private_ip_address" : "172.31.20.237",
 
     "base_url": "http://ec2-18-191-242-77.us-east-2.compute.amazonaws.com",
 
@@ -11,8 +10,6 @@ module.exports = {
         "VONAGE_API_SECRET" : "hVPvoNojkTjXZ0aa",
         "VONAGE_API_KEY" : "6232d907",
         "VONAGE_APPLICATION_ID" : "2cc80ce9-7555-4a3c-93e3-34bf9569b95c",
-        "VONAGE_APPLICATION_PRIVATE_KEY_PATH" : "/Users/chijioke/death-valley/nexmo_private.key",
-        "TO_NUMBER": "234810*****",
         "SMS_SENDER" : "Stream Eats"
     },
 
@@ -20,7 +17,6 @@ module.exports = {
         "BUCKET_NAME" : "streameats",
         "ACCESS_KEY_ID": "AKIARXBKP6BOV6U4ZNGE",
         "SECRET_ACCESS_KEY": "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",
-        "API_VERSION": "",
         "REGION": "us-east-1",
         "GRANTEE": ""
     },
@@ -30,9 +26,15 @@ module.exports = {
         "SECRET_KEY_ACCESS_KEY" : "eDexnSMQZ6Odc0BB5etA+yI2ctBSTuL/2sJ1X/xf"
     },
 
-    "database": "mongodb://localhost:27017/streameats", //for production
+    "twilio": {
+        "ACCOUNT_SID": "AC7920a12edee830d37a1a75e75d7262b5",
+        "API_KEY": "SK9fe6990dfa8c85a7d6777b96c43f001a",
+        "API_SECRET": "P28Dn1SHoGJstdyMvcJfXvlvCUGkycln"
+    },
 
-    //'database' : 'mongodb+srv://phantom-admin:Pe4NFrsQFz2Pv2pX@cluster0.08uuj.mongodb.net/streameats?retryWrites=true&w=majority', //for testing.
+    //"database": "mongodb://localhost:27017/streameats", //for production
+
+    'database' : 'mongodb+srv://phantom-admin:Pe4NFrsQFz2Pv2pX@cluster0.08uuj.mongodb.net/streameats?retryWrites=true&w=majority', //for testing.
 
     "secret": "*KUITUR!GJ@L8BV9*4*JVLY$&*CCD!O$RTRD2$4U)HPUL!UG)XR(6&AWIMYG4B(6&Q3L&YDLJFJ*P1S4HJA$T$4*X2HC80WGF3VOT1!AMDNM6LQ1G6YXMRB@%3K2$30MOP7*X5WCF$(@IUA*52I1P(KVRIO807J^8G7$XFH!P(0EV#HJF1X&4#VB5XWVJTTD)STWV6R$IYS6&%V80D9VL0M#N79%XR3BP&S$1C4IWU20W6U6HST5S32($S%8&06X)VOR!*^QTONN*FYPOP3#@UM5^2)C81MK9TK!14LQFO7!",
     "env" : "development",
