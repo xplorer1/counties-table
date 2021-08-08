@@ -18,6 +18,8 @@ router.route('/pre_sign_up')
 router.post('/attachments', middlewares.checkToken, upload.single('image'), UserController.updateRestaurantAttachments);
 router.get('/attachments/:attachment_id', UserController.fetchAttachment);
 
+router.get('/availability/:status', middlewares.checkToken, UserController.toggleAvailability);
+
 router.get('/restaurants', UserController.listRestaurants);
 
 router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEatsId);

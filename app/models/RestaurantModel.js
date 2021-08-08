@@ -15,6 +15,7 @@ var RestaurantSchema = new Schema({
 	'streameats_id': String,
 	'number_of_streams': Number,
 	'verified': {type: Boolean, default: false},
+	'is_live': {type: String, default: "offline"},
 	'created_on' : {type: Date, default: new Date()}
 });
 
