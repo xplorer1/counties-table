@@ -154,13 +154,23 @@ module.exports = {
             let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
-            if(!["online", "offline"].includes(req.params.status)) return res.status(400).json({message: "Acceptable values are 'online' or 'offline'"});
-            if(restaurant.is_live === req.params.status) return res.status(400).json({message: "User is already " + restaurant.is_live + "."});
+            if(!["online", "offline"].includes(req.body.status)) return res.status(400).json({message: "Acceptable values are 'online' or 'offline'"});
+            if(restaurant.is_live === req.body.status) return res.status(400).json({message: "User is already " + restaurant.is_live + "."});
 
-            restaurant["is_live"] = req.params.status;
+            restaurant["is_live"] = req.body.status;
             await restaurant.save();
 
             return res.status(200).json({message: "Availability updated."});
+
+        } catch (error) {
+            return res.status(500).json({ message: error.message, status: 500 });
+        }
+    },
+
+    listLiveRestaurants: async function(req, res) {
+        try {
+            let online_restaurants = await RestaurantModel.find({is_live: "online"}).exec();
+            return res.status(200).json({data: online_restaurants, status: 200});
 
         } catch (error) {
             return res.status(500).json({ message: error.message, status: 500 });
