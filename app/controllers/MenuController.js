@@ -81,4 +81,18 @@ module.exports = {
             });
         }
     },
+
+    deleteMenuItem: async function(req, res) {
+        try {
+            let menu_item = await MenuModel.find({_id: req.params.menu_item, phone: req.verified.phone}).exec();
+            if(!menu_item) return res.status(404).json({status: 404, message: "Invalid menu ID."});
+
+            let delete_item = await MenuModel.deleteOne({_id: req.params.menu_item}).exec();
+            if(!delete_item) return res.status(500).json({status: 500, message: "Unable to delete menu item."});
+
+            return res.status(200).json({message: "Menu item successfully deleted."});
+        } catch (error) {
+            return res.status(500).json({ message: error.message, status: 500 });
+        }
+    },
 }

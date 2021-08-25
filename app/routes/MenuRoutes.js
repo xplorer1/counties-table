@@ -7,9 +7,10 @@ const multer = require('multer');
 const upload = multer({dest: 'uploads/'}); //for handling multipart form data.
 
 router.route('/')
-    .post(middlewares.checkToken, upload.single('image'), MenuController.createMenuItem)
+    .post(middlewares.checkToken, upload.single('image'), MenuController.createMenuItem);
 
-router.get("/:restaurant", MenuController.listMenuItems)
+router.get("/:restaurant", MenuController.listMenuItems);
+router.delete("/:menu_item", middlewares.checkToken, MenuController.deleteMenuItem);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });
