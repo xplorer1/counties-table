@@ -4,6 +4,7 @@ const UserModel = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
 const MenuModel = require('../models/MenuModel');
 const PreSignUpModel = require("../models/PreSignUpModel");
+let mailer = require("../utils/mailer");
 
 const fs = require("fs");
 const util = require("util");
@@ -100,7 +101,7 @@ module.exports = {
             let existing_restaurant = await RestaurantModel.findOne({$or : [{email: req.body.email}, {phone: req.body.phone}]}).exec();
             if(existing_restaurant) return res.status(409).json({status: 409, message: 'Email or phone number already registered.'});
 
-            var profile_id = req.body.business_name.replace(/ /g, '') + "_" + uuid.v4(), verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();;
+            var profile_id = req.body.business_name.toLowerCase().replace(/ /g, '') + "_" + uuid.v4(), verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();;
 
             var new_restaurant = new RestaurantModel({
                 'email' : req.body.email,
@@ -118,6 +119,7 @@ module.exports = {
 
             var new_user = new UserModel({
                 'phone': req.body.phone.replace("0", "234"),
+                'email': req.body.email,
                 'role': "RESTAURANT",
                 'verification_code' : verification_code,
             });

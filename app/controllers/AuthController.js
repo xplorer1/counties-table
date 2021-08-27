@@ -1,34 +1,33 @@
-const UserModel = require('../models/UserModel');
-const messenger = require("../utils/messenger");
+let UserModel = require('../models/UserModel');
+let messenger = require("../utils/messenger");
+let mailer = require("../utils/mailer");
 
-const config = require('../../config');
-const uuid = require('node-uuid');
+let config = require('../../config');
+let uuid = require('node-uuid');
 
 let jwt = require('jsonwebtoken');
-const RestaurantModel = require('../models/RestaurantModel');
+let RestaurantModel = require('../models/RestaurantModel');
 
-const AccessToken = require('twilio').jwt.AccessToken;
-const VideoGrant = AccessToken.VideoGrant;
+let AccessToken = require('twilio').jwt.AccessToken;
+let VideoGrant = AccessToken.VideoGrant;
 
 // Used when generating any kind of tokens
 // To set up environmental variables, see http://twil.io/secure
-const twilioAccountSid = config.twilio.ACCOUNT_SID;
-const twilioApiKey = config.twilio.API_KEY;
-const twilioApiSecret = config.twilio.API_SECRET;
+let twilioAccountSid = config.twilio.ACCOUNT_SID;
+let twilioApiKey = config.twilio.API_KEY;
+let twilioApiSecret = config.twilio.API_SECRET;
 
 module.exports = {
 
     signIn: async function(req, res) {
-        if(!req.body.phone) return res.status(400).json({status: 400, message: "Phone required."});
-
-        let phone = req.body.phone.trim().replace("0", "234");
+        if(!req.body.email) return res.status(400).json({status: 400, message: "Phone required."});
+        let email = req.body.email.trim();
 
         try {
-            let user = await UserModel.findOne({phone: phone}).exec();
+            let user = await UserModel.findOne({email: email}).exec();
             if(!user) return res.status(404).json({status: 404, message: 'User not found.'});
 
-            if(!user.verified) return res.status(400).json({message: "Your phone is yet to be verified. Check your inbox for verification code."});
-
+            if(!user.verified) return res.status(400).json({message: "Your email is yet to be verified. Check your inbox for verification code."});
             var login_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();
 
             user.login_code = login_code;
@@ -36,10 +35,9 @@ module.exports = {
 
             await user.save();
 
-            let text = "Hello! Someone recently tried to login with your phone number. If this was you, enter this code below into your login form: " + login_code + " to proceed.";
-            messenger.sendVonageSms(user.phone, text);
+            mailer.sendSignInMail(user.email, login_code);
 
-            return res.status(200).json({status: 200, message: 'Login code has been sent to phone number.'});
+            return res.status(200).json({status: 200, message: 'Login code has been sent to email address.'});
 
         } catch (error) {
             return res.status(500).json({status: 500, message: 'Error processing requests.', error: error.message});
@@ -113,10 +111,10 @@ module.exports = {
 
     verifySignInCode: async function(req, res) {
         if(!req.body.login_code) return res.status(400).json({status: 400, message: "Code is required."});
-        if(!req.body.phone) return res.status(400).json({status: 400, message: "Phone is required."});
+        if(!req.body.email) return res.status(400).json({status: 400, message: "Email is required."});
 
         try {
-            let user = await UserModel.findOne({login_code: req.body.login_code.trim().toUpperCase(), phone: req.body.phone.replace("0", "234")}).exec();
+            let user = await UserModel.findOne({login_code: req.body.login_code.trim().toUpperCase(), email: req.body.email}).exec();
             if(!user) return res.status(404).json({status: 404, message: "Code invalid."});
 
             user.login_code = null;
@@ -124,7 +122,7 @@ module.exports = {
 
             user.save();
 
-            var token = jwt.sign({phone: req.body.phone.replace("0", "234")}, config.secret, {
+            var token = jwt.sign({email: req.body.email.replace("0", "234")}, config.secret, {
                 expiresIn: 432000 // expires in 5 days
             });
 
