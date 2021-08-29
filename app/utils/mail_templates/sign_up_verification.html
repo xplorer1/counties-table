@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style type="text/css"> 
+            body {padding: 0px;margin: 0px;font-size: 18px;line-height: 29.7px;font-family: 'Bw Modelica';font-weight: 500;}
+            .container {width: 100%;margin: 0px auto;}
+            .header {width: 50%; margin: 0px auto;padding-top: 42px; padding-bottom: 100px;}
+            .left-col {float: left;}
+            .right-col {float: right;text-align: right;font-family: 'Bw Modelica';font-size: 10px;font-style: normal;font-weight: 500;line-height: 45px;letter-spacing: 0em;text-align: left;}
+            .banner {margin: 0px auto; width: 50%;}
+            .content {width: 45%; margin: 0 auto;font-size: 18px;font-style: normal;font-weight: 500;line-height: 30px;letter-spacing: 0em;}
+            .content strong {text-align: center;border-radius: 5px;padding: 10px;font-size: 40px;}
+            .footer {width: 100%; padding: 20px;background: #F9F9F9;}
+            .footer-container {width: 50%;margin: 0 auto;}
+            .footer-left-col {float: left;width: 50%;}
+            .footer-left-col span {font-family: 'Bw Modelica';font-size: 4px;font-style: normal;letter-spacing: 0em;margin-left:30px; display: block;line-height: 0px;}
+            .footer-left-col .text {margin-top:50px;font-family: 'Bw Modelica';font-size: 10px;font-style: normal;font-weight: 500;line-height: 15px;letter-spacing: 0em;text-align: left;}
+            .footer-right-col {float: right;width: 50%; text-align: right;}
+            .copyright {font-family: 'Bw Modelica';font-size: 7px;font-style: normal;font-weight: 500;line-height: 18px;letter-spacing: 0em;text-align: left;}
+            @media screen and (max-width: 630px) {
+                .header {width: 90%; margin: 0px auto; text-align: center;}
+                .left-col {float: none; text-align: center;}
+                .right-col {float: none; text-align: center;}
+                .banner {width: 90%; text-align: center;}
+                .content {width: 80%;font-size: 15px;}
+                .footer {text-align: center;padding: 20px 0px;}
+                .footer-left-col {float: none;width: 100%; text-align: center;margin-left:0px;}
+                .footer-left-col span {display: none;}
+                .footer-left-col .text {text-align: center}
+                .footer-left-col image {text-align: center;}
+                .footer-right-col {float: none;width: 100%;text-align: center;}
+                .copyright {text-align: center;}
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class=".container">
+            <div class="header">
+                <div class="left-col">
+                    <img src="{{logo}}">                         
+                </div>
+                <div class="right-col">
+                    Bringing you the best experience in your next food order...
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            
+            <div class="content">
+                <p>Hello! Welcome to Stream Eats and thank you for signing up. To activate your account please verify your email address by typing this verification code into your sign up form: </p> 
+                <p style="text-align: center;"><strong>{{verification_code}}</strong></p>
+                <p>All future notifications will be sent to this email address. Thank you for choosing Stream Eats.</p>
+                <p>The Team</p>
+               <p><a href="https://www.streameats.com.ng">Stream Eats</a></p>
+            </div>
+            <div class="footer">
+                <div class="footer-container">
+                    <div class="footer-left-col">
+                        <img src="{{logo}}" style="width: 100px;"></img>                         
+                        <p class="copyright">Copyright Stream Eats, All rights reserved.</p>                                                   
+                    </div>
+                    <div class="footer-right-col">
+                        <span style="font-family: Bw Modelica;font-size: 7px;font-style: normal;font-weight: 500;line-height: 20px;letter-spacing: 0em;margin-right:6px;display: block;">Join our community</span>
+                        <a href="https://web.facebook.com/Streameats/"><img src="{{facebook}}" style="width: 20px;"></img></a>
+                        <a href="https://www.instagram.com/streameats/"><img src="{{instagram}}" style="width: 20px;"></img></a>
+                        <a href="https://twitter.com/streameats/"><img src="{{twitter}}" style="width: 20px;"></img></a>
+                    </div>
+                    <div style="clear: both;"></div>                                                                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

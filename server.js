@@ -42,6 +42,7 @@ let OrderRoutes = require('./app/routes/OrderRoutes');
 let UserRoutes = require('./app/routes/UserRoutes');
 let AuthRoutes = require('./app/routes/AuthRoutes');
 let MenuRoutes = require('./app/routes/MenuRoutes');
+let MiscRoutes = require('./app/routes/MiscRoutes');
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -56,6 +57,7 @@ app.use("/api/order", OrderRoutes);
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/menu", MenuRoutes);
+app.use("/api/misc", MiscRoutes);
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('*', function(req, res) {

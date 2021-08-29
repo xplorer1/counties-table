@@ -20,7 +20,7 @@ let twilioApiSecret = config.twilio.API_SECRET;
 module.exports = {
 
     signIn: async function(req, res) {
-        if(!req.body.email) return res.status(400).json({status: 400, message: "Phone required."});
+        if(!req.body.email) return res.status(400).json({status: 400, message: "Email required."});
         let email = req.body.email.trim();
 
         try {
@@ -82,6 +82,8 @@ module.exports = {
                     expiresIn: 432000 // expires in 5 days
                 });
 
+                mailer.sendWelcomeMail(restaurant.email, restaurant.business_name, restaurant.streameats_link);
+
                 return res.status(200).json({status: 200, data: token, message: 'Activation successful!'});
 
             } else {
@@ -91,8 +93,7 @@ module.exports = {
 
                 await user.save();
 
-                let text = "To activate your account please verify your phone number by typing this verification code into your sign up form " + verification_code;        
-                messenger.sendVonageSms(user.phone, text);
+                mailer.sendSignUpVerificationMail(user.email, verification_code);      
 
                 return res.status(400).json({status: 400, message: 'Activation code expired. Enter the code just sent to your registered phone.'});
             }
