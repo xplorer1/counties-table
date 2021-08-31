@@ -56,12 +56,12 @@ module.exports = {
         if(!req.body.email) return res.status(400).json({status: 400, message: "Email is required."});
 
         try {
-            let user = await UserModel.findOne({verification_code: req.body.verification_code.trim().toUpperCase(), phone: req.body.phone.replace("0", "234")}).exec();
+            let user = await UserModel.findOne({verification_code: req.body.verification_code.trim().toUpperCase(), email: req.body.email}).exec();
             if(!user) return res.status(404).json({status: 404, message: "Code invalid."});
 
-            if(user.verified) return res.status(400).json({status: 400, message: 'Phone already verified.'});
+            if(user.verified) return res.status(400).json({status: 400, message: 'Email already verified.'});
 
-            let restaurant = await RestaurantModel.findOne({phone: req.body.phone.replace("0", "234")}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.body.email}).exec();
             
             var expiry_date = new Date(user.created_on);
             expiry_date.setDate(expiry_date.getDate() + 2);
@@ -78,7 +78,7 @@ module.exports = {
 
                 await restaurant.save();
 
-                var token = jwt.sign({phone: req.body.phone}, config.secret, {
+                var token = jwt.sign({email: req.body.email}, config.secret, {
                     expiresIn: 432000 // expires in 5 days
                 });
 

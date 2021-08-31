@@ -36,6 +36,8 @@ module.exports = {
         "API_SECRET": "P28Dn1SHoGJstdyMvcJfXvlvCUGkycln"
     },
 
+    //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
+
     //"database": "mongodb://localhost:27017/streameats", //for production
 
     'database' : 'mongodb+srv://phantom-admin:Pe4NFrsQFz2Pv2pX@cluster0.08uuj.mongodb.net/streameats?retryWrites=true&w=majority', //for testing.
