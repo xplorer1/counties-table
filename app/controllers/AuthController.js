@@ -53,7 +53,7 @@ module.exports = {
 
     verifySignUpCode: async function (req, res) {
         if(!req.body.verification_code) return res.status(400).json({status: 400, message: "Code is required."});
-        if(!req.body.phone) return res.status(400).json({status: 400, message: "Phone is required."});
+        if(!req.body.email) return res.status(400).json({status: 400, message: "Email is required."});
 
         try {
             let user = await UserModel.findOne({verification_code: req.body.verification_code.trim().toUpperCase(), phone: req.body.phone.replace("0", "234")}).exec();
