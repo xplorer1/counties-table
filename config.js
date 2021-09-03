@@ -37,6 +37,7 @@ module.exports = {
     },
 
     //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
+    //ssh -i /Users/chijioke/death-valley/stream_eats.pem ubuntu@ec2-54-196-51-20.compute-1.amazonaws.com
 
     //"database": "mongodb://localhost:27017/streameats", //for production
 

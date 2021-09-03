@@ -154,7 +154,7 @@ module.exports = {
 
     toggleAvailability: async function(req, res) {
         try {
-            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
             if(!["online", "offline"].includes(req.body.status)) return res.status(400).json({message: "Acceptable values are 'online' or 'offline'"});
@@ -196,7 +196,7 @@ module.exports = {
 
     updateRestaurant: async function(req, res) {
         try {
-            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
             let user = await UserModel.findOne({phone: restaurant.phone}).exec();
@@ -231,7 +231,7 @@ module.exports = {
 
     getRestaurant: async function(req, res) {
         try {
-            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
             let menus = await MenuModel.find({restaurant: restaurant._id}).exec();
@@ -252,7 +252,7 @@ module.exports = {
 
         try {
 
-            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
             let file_stream = fs.createReadStream(req.file.path);

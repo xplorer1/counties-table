@@ -78,7 +78,7 @@ module.exports = {
 
                 await restaurant.save();
 
-                var token = jwt.sign({email: req.body.email}, config.secret, {
+                var token = jwt.sign({phone: restaurant.phone, email: req.body.email}, config.secret, {
                     expiresIn: 432000 // expires in 5 days
                 });
 
@@ -123,7 +123,7 @@ module.exports = {
 
             user.save();
 
-            var token = jwt.sign({email: req.body.email.replace("0", "234")}, config.secret, {
+            var token = jwt.sign({phone: user.phone, email: req.body.email}, config.secret, {
                 expiresIn: 432000 // expires in 5 days
             });
 
