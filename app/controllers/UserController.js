@@ -230,6 +230,7 @@ module.exports = {
     },
 
     getRestaurant: async function(req, res) {
+        console.log("verified: ", req.verified)
         try {
             let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});

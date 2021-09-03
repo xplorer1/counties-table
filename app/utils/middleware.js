@@ -31,6 +31,7 @@ const middlewares = {
                     let obj = {};
                     obj.token = token;
                     obj.phone = verified.phone;
+                    obj.email = verified.email;
                     obj.role = verified.role;
                     req.verified = obj;
 

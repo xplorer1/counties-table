@@ -123,6 +123,8 @@ module.exports = {
 
             user.save();
 
+            console.log("user: ", user);
+
             var token = jwt.sign({phone: user.phone, email: req.body.email}, config.secret, {
                 expiresIn: 432000 // expires in 5 days
             });
