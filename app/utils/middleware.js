@@ -41,6 +41,10 @@ const middlewares = {
         } else {
             return res.status(401).send({status: 401, message: "token-required" });
         }
+    },
+
+    checkPublicKey: function(req, res, next) {
+        
     }
 }
 

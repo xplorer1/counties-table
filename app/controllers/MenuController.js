@@ -1,11 +1,4 @@
-const Customer = require('../models/CustomersModel');
-const Restaurant = require('../models/RestaurantModel');
-const User = require('../models/UserModel');
-const TransactionJournal = require('../models/TransactionJournal');
-
 const config = require('../../config');
-const uuid = require('node-uuid');
-const crypto = require('crypto');
 
 const fs = require("fs");
 const util = require("util");
@@ -48,6 +41,8 @@ module.exports = {
                 if (err) {
                     return res.status(500).json({status: 500, message: err.message});
                 }
+
+                console.log("data: ', ", data);
 
                 let new_menu = new MenuModel();
                 new_menu.description = req.body.description;

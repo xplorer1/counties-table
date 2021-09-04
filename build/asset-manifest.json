@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "/static/css/main.39fbc0ba.chunk.css",
+    "main.js": "/static/js/main.cb7012e9.chunk.js",
+    "main.js.map": "/static/js/main.cb7012e9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.dcea20d3.js",
+    "runtime-main.js.map": "/static/js/runtime-main.dcea20d3.js.map",
+    "static/css/2.f6c7d7d9.chunk.css": "/static/css/2.f6c7d7d9.chunk.css",
+    "static/js/2.127115ef.chunk.js": "/static/js/2.127115ef.chunk.js",
+    "static/js/2.127115ef.chunk.js.map": "/static/js/2.127115ef.chunk.js.map",
+    "static/js/3.06eaee44.chunk.js": "/static/js/3.06eaee44.chunk.js",
+    "static/js/3.06eaee44.chunk.js.map": "/static/js/3.06eaee44.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.f6c7d7d9.chunk.css.map": "/static/css/2.f6c7d7d9.chunk.css.map",
+    "static/css/main.39fbc0ba.chunk.css.map": "/static/css/main.39fbc0ba.chunk.css.map",
+    "static/js/2.127115ef.chunk.js.LICENSE.txt": "/static/js/2.127115ef.chunk.js.LICENSE.txt",
+    "static/media/fb.e72373c7.svg": "/static/media/fb.e72373c7.svg",
+    "static/media/goodeats.46bba04d.svg": "/static/media/goodeats.46bba04d.svg",
+    "static/media/header.159ba6f3.png": "/static/media/header.159ba6f3.png",
+    "static/media/hero.scss": "/static/media/hero-bg.42496b53.svg",
+    "static/media/ig.ab98a22b.svg": "/static/media/ig.ab98a22b.svg",
+    "static/media/ln.ed275091.svg": "/static/media/ln.ed275091.svg",
+    "static/media/logo.2b69555a.svg": "/static/media/logo.2b69555a.svg",
+    "static/media/logo.a607a192.svg": "/static/media/logo.a607a192.svg",
+    "static/media/logo.ac8b7bd9.svg": "/static/media/logo.ac8b7bd9.svg",
+    "static/media/owner.f778b175.svg": "/static/media/owner.f778b175.svg",
+    "static/media/owner2.bf54b5fc.svg": "/static/media/owner2.bf54b5fc.svg",
+    "static/media/owner3.196d4008.svg": "/static/media/owner3.196d4008.svg",
+    "static/media/steps.ac282a92.png": "/static/media/steps.ac282a92.png",
+    "static/media/stream.ac8b7bd9.svg": "/static/media/stream.ac8b7bd9.svg",
+    "static/media/tt.94878c68.svg": "/static/media/tt.94878c68.svg",
+    "static/media/tw.df4386f5.svg": "/static/media/tw.df4386f5.svg",
+    "static/media/yt.c60ed4fa.svg": "/static/media/yt.c60ed4fa.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dcea20d3.js",
+    "static/css/2.f6c7d7d9.chunk.css",
+    "static/js/2.127115ef.chunk.js",
+    "static/css/main.39fbc0ba.chunk.css",
+    "static/js/main.cb7012e9.chunk.js"
+  ]
+}
