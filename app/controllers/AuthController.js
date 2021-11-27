@@ -73,7 +73,6 @@ module.exports = {
                 user.last_login = new Date();
                 
                 await user.save();
-
                 restaurant.verified = true;
 
                 await restaurant.save();
@@ -88,7 +87,6 @@ module.exports = {
 
             } else {
                 var verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();
-
                 user.verification_code = verification_code;
 
                 await user.save();
@@ -132,7 +130,7 @@ module.exports = {
             return res.status(200).json({ status: 200, message: 'Login successful.', data: token});
 
         } catch (error) {
-            
+            return res.status(500).json({status: 500 ,message: error.message});
         }
     },
 
