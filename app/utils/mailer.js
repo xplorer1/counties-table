@@ -38,7 +38,9 @@ module.exports = {
                     html: ready_html,
                 };
         
-                await sgMail.send(msg);
+                let msx = await sgMail.send(msg);
+
+                console.log("mxs: ", msx);
                     
             });
             
@@ -71,7 +73,7 @@ module.exports = {
                 let msg = {
                     to: recipient, // Change to your recipient
                     from:  'Stream Eats <' + general_sender + '>', // Change to your verified sender
-                    subject: 'Sign In Code',
+                    subject: 'Sign Up Code',
                     text: "Hello! Welcome to Stream Eats and thank you for signing up. To activate your account please verify your email address by typing this verification code into your sign up form: " + verification_code + ". All future notifications will be sent to this email address. Thank you for choosing Stream Eats! The Stream Eats Team. www.streameats.com.ng",
                     html: ready_html,
                 };

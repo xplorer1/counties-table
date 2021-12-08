@@ -2,6 +2,7 @@ const Customer = require('../models/CustomersModel');
 const Restaurant = require('../models/RestaurantModel');
 const User = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
+const PaystackLogModel = require("../models/PaystackLogModel");
 
 const config = require('../../config');
 const uuid = require('node-uuid');
@@ -38,16 +39,67 @@ module.exports = {
             new_order.restaurant_id = req.body.restaurant_id;
             new_order.delivery_agent = req.body.delivery_agent;
             new_order.order_cost = req.body.quantity * item.price;
+            new_order.order_status = "PENDING";
 
-            await new_order.save();
+            let _order = await new_order.save();
+
+            let txn_journal = new TransactionJournal();
+            var ref = uuid.v4();
+
+            txn_journal.txnref = ref;
+            txn_journal.amount = req.body.quantity * item.price;
+            txn_journal.title = "Food Order";
+            txn_journal.customer = req.body.customer_phone;
+            txn_journal.order = _order._id;
+
+            await txn_journal.save();
 
             //send payment and whatsapp link.
 
-            return res.status(200).json({status: 200, message: 'Order created.', payment_link: "", whatsapp_link: restaurant.whatsapp_link});
+            return res.status(200).json({status: 200, message: 'Order created.', payment_ref: txnref, whatsapp_link: restaurant.whatsapp_link});
 
         } catch (error) {
             return res.status(500).json({status: 500, message: error.message});
         }
+    },
+
+    confirmAndLogPayEvents: async function(req, res) {
+
+        var hash = crypto.createHmac('sha512', config.paystack_sk).update(JSON.stringify(req.body)).digest('hex');
+
+	    if (hash == req.headers['x-paystack-signature']) {
+
+	        var event = req.body;
+	        var eventlog = new PaystackLogModel();
+	        eventlog.log = event;
+
+	        eventlog.save(function(err) {
+                if (err) console.log(err);
+            });
+
+            try {
+
+                let txn = await TransactionJournal.findOne({ txnref: event.data.reference, success: false }).exec();
+                if(!txn) console.log("Unable to find transaction with that ref: ", event.data.reference);
+
+                if(event.data.status === "success") {
+                    let order = OrderModel.findOne({_id: txn.order});
+                    if(!order) console.log("#UNABLE TO FIND ORDER WITH ORDER _ID");
+
+                    order.order_status = "CONFIRMED";
+                    await order.save();
+                    
+                    console.log("successful");                    
+                }
+
+            } catch (error) {
+                console.log("#ERROR PROCESSING REQUESTS: ", error.message);
+            }
+	    } else {
+            console.log("hashes don't match.");
+        }
+
+        return res.status(200).json(200);
     },
 
     listOrders: async function(req, res) {

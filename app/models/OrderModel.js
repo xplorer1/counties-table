@@ -15,6 +15,7 @@ var FoodOrderSchema = new Schema({
         ref: 'Menu'
     },
     'delivery_address' : String,
+    'order_status': String,
     'created_on' : {type: Date, default: Date.now},
 	'last_updated' : {type: Date}
 });

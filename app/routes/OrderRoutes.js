@@ -9,6 +9,8 @@ router.route('/')
 
 router.get("/:customer_phone", OrderController.listOrders);
 
+router.post("/paystack_notification", OrderController.confirmAndLogPayEvents);
+
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });
 });

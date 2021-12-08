@@ -30,6 +30,9 @@ module.exports = {
         "SECRET_KEY_ACCESS_KEY" : "eDexnSMQZ6Odc0BB5etA+yI2ctBSTuL/2sJ1X/xf"
     },
 
+    "paystack_sk": "sk_test_57b1266d445ef2f7e3240d3beaaacb55aab8d097",
+    "paystack_pk": "pk_test_cda22d68b0416e571c67f5e175ab72110df594fd",
+
     "twilio": {
         "ACCOUNT_SID": "AC7920a12edee830d37a1a75e75d7262b5",
         "API_KEY": "SK9fe6990dfa8c85a7d6777b96c43f001a",

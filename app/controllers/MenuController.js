@@ -28,8 +28,10 @@ module.exports = {
         try {
             let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+            console.log("file: ", req.file)
 
             let file_stream = fs.createReadStream(req.file.path);
+            console.log("chce")
 
             let params = {
                 Bucket: config.aws_s3.BUCKET_NAME,

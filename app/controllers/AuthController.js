@@ -33,6 +33,8 @@ module.exports = {
             user.login_code = login_code;
             user.login_codes.push(login_code);
 
+            console.log("login_code: ", login_code)
+
             await user.save();
 
             mailer.sendSignInMail(user.email, login_code);
