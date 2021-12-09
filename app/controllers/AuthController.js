@@ -27,7 +27,17 @@ module.exports = {
             let user = await UserModel.findOne({email: email}).exec();
             if(!user) return res.status(404).json({status: 404, message: 'User not found.'});
 
-            if(!user.verified) return res.status(400).json({message: "Your email is yet to be verified. Check your inbox for verification code."});
+            if(!user.verified) {
+                let verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();
+
+                user.verification_code = verification_code;
+                await user.save();
+                
+                mailer.sendSignUpVerificationMail(req.body.email, verification_code);
+
+                return res.status(400).json({message: "Your email is yet to be verified. Check your inbox for verification code."});
+            }
+
             var login_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();
 
             user.login_code = login_code;
