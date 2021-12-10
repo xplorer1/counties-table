@@ -76,7 +76,7 @@ module.exports = {
             let restaurant = await RestaurantModel.findOne({email: req.body.email}).exec();
             
             var expiry_date = new Date(user.created_on);
-            expiry_date.setDate(expiry_date.getDate() + 2);
+            expiry_date.setDate(expiry_date.getDate() + 20);
 
             if (expiry_date > new Date()) { //code is still valid.
 
