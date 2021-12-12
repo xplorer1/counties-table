@@ -67,6 +67,9 @@ module.exports = {
         if(!req.body.verification_code) return res.status(400).json({status: 400, message: "Code is required."});
         if(!req.body.email) return res.status(400).json({status: 400, message: "Email is required."});
 
+        console.log("vcode: ", req.body.verification_code);
+        console.log("email: ", req.body.email);
+
         try {
             let user = await UserModel.findOne({verification_code: req.body.verification_code.trim().toUpperCase(), email: req.body.email}).exec();
             if(!user) return res.status(404).json({status: 404, message: "Code invalid."});
@@ -74,39 +77,23 @@ module.exports = {
             if(user.verified) return res.status(400).json({status: 400, message: 'Email already verified.'});
 
             let restaurant = await RestaurantModel.findOne({email: req.body.email}).exec();
+
+            user.verified = true;
+            user.verified_on = new Date();
+            user.last_login = new Date();
             
-            var expiry_date = new Date(user.created_on);
-            expiry_date.setDate(expiry_date.getDate() + 20);
+            await user.save();
+            restaurant.verified = true;
 
-            if (expiry_date > new Date()) { //code is still valid.
+            await restaurant.save();
 
-                user.verified = true;
-                user.verified_on = new Date();
-                user.last_login = new Date();
-                
-                await user.save();
-                restaurant.verified = true;
+            var token = jwt.sign({phone: restaurant.phone, email: req.body.email}, config.secret, {
+                expiresIn: 432000 // expires in 5 days
+            });
 
-                await restaurant.save();
+            mailer.sendWelcomeMail(restaurant.email, restaurant.business_name, restaurant.streameats_link);
 
-                var token = jwt.sign({phone: restaurant.phone, email: req.body.email}, config.secret, {
-                    expiresIn: 432000 // expires in 5 days
-                });
-
-                mailer.sendWelcomeMail(restaurant.email, restaurant.business_name, restaurant.streameats_link);
-
-                return res.status(200).json({status: 200, data: token, message: 'Activation successful!'});
-
-            } else {
-                var verification_code = uuid.v4().split('').splice(0, 5).join('').toUpperCase();
-                user.verification_code = verification_code;
-
-                await user.save();
-
-                mailer.sendSignUpVerificationMail(user.email, verification_code);      
-
-                return res.status(400).json({status: 400, message: 'Activation code expired. Enter the code just sent to your registered phone.'});
-            }
+            return res.status(200).json({status: 200, data: token, message: 'Activation successful!'});
 
         } catch (error) {
             return res.status(500).json({status: 500 ,message: error.message});
