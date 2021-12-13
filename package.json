@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://kublai1@bitbucket.org/adbasadorplus-devs/adbasador-plus-be.git"
+    "url": ""
   },
   "author": "Chijioke",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/adbasadorplus-devs/adbasador-plus-be#readme",
+  "homepage": "",
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
     "@vonage/server-sdk": "^2.10.7-beta-2",
