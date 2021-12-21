@@ -4,6 +4,8 @@ const UserModel = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
 const MenuModel = require('../models/MenuModel');
 const PreSignUpModel = require("../models/PreSignUpModel");
+const {successResponse, responseCode, errorResponse} = require("../utils/helpers");
+const {startStreaming, endStreaming} = require("../Services/TwilioStreamerService");
 let mailer = require("../utils/mailer");
 
 const fs = require("fs");
@@ -379,5 +381,34 @@ module.exports = {
 
             return res.status(200).json({message: "Support created!"});
         });
+    },
+
+    startLiveStreaming: async function (req, res) {
+        if(!req.body.restaurantId) return errorResponse(res, responseCode.NOT_FOUND, "Restaurant ID is required.");
+        if(!req.body.restaurantName) return errorResponse(res, responseCode.NOT_FOUND,"Restaurant Name is required.");
+
+        try {
+            const data = await startStreaming(req.body.restaurantId, req.body.restaurantName);
+            return successResponse(res, responseCode.SUCCESS, "Restaurant Streaming Details!", data);
+        } catch (error) {
+            return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', error.message);
+        }
+    },
+
+    endLiveStreaming: async function (req, res) {
+        if(!req.body.restaurantId) return errorResponse(res, responseCode.NOT_FOUND, "Restaurant ID is required.");
+        if(!req.body.restaurantName) return errorResponse(res, responseCode.NOT_FOUND,"Restaurant Name is required.");
+        if(!req.body.roomId) return errorResponse(res, responseCode.NOT_FOUND,"Room ID is required.");
+        if(!req.body.playerStreamerId) return errorResponse(res, responseCode.NOT_FOUND,"Player Streamer ID is required.");
+        if(!req.body.mediaProcessorId) return errorResponse(res, responseCode.NOT_FOUND,"Media Processor ID is required.");
+
+        try {
+            const data = await endStreaming(req.body.roomId, req.body.restaurantId, req.body.restaurantName, req.body.playerStreamerId, req.body.mediaProcessorId);
+
+            return successResponse(res, responseCode.SUCCESS, `Restaurant ${data} Live Streaming has ended`);
+        } catch (error) {
+            return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', error.message);
+        }
     }
+
 }
