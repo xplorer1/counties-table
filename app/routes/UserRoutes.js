@@ -28,8 +28,9 @@ router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEat
 /**
  * Live Streaming
  */
-router.post('/restaurant/start', UserController.startLiveStreaming);
-router.post('/restaurant/end', UserController.endLiveStreaming);
+router.post('/restaurant/start_stream', UserController.startLiveStreaming);
+router.post('/restaurant/end_stream', UserController.endLiveStreaming);
+router.post('/restaurant/join_stream', UserController.joinLiveStream);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist' });
