@@ -20,6 +20,13 @@ module.exports = {
         if(!req.body.item_id) return res.status(400).json({status: 400, message: "item_id required."});
         if(!req.body.customer_phone) return res.status(400).json({status: 400, message: "customer_phone required."});
         if(!req.body.delivery_address) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_address) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_name) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_phone) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_email) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.delivery_name) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.delivery_phone) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.delivery_email) return res.status(400).json({status: 400, message: "delivery_address required."});
         if(!req.body.restaurant_id) return res.status(400).json({status: 400, message: "restaurant_id required."});
         if(!req.body.delivery_agent) return res.status(400).json({status: 400, message: "delivery_agent required."});
 
@@ -32,14 +39,24 @@ module.exports = {
 
             let new_order = new OrderModel();
 
+
+            new_order.order_status = "PENDING";
             new_order.quantity = req.body.quantity;
             new_order.item_id = req.body.item_id;
             new_order.customer_phone = req.body.customer_phone;
             new_order.delivery_address = req.body.delivery_address;
+            new_order.pickup_address = req.body.delivery_address;
+            new_order.delivery_name = req.body.delivery_name;
+            new_order.delivery_phone = req.body.delivery_phone;
+            new_order.delivery_email = req.body.delivery_email;
+            new_order.pickup_name = req.body.pickup_name;
+            new_order.pickup_phone = req.body.pickup_phone;
+            new_order.pickup_email = req.body.pickup_email;
             new_order.restaurant_id = req.body.restaurant_id;
             new_order.delivery_agent = req.body.delivery_agent;
             new_order.order_cost = req.body.quantity * item.price;
             new_order.order_status = "PENDING";
+
 
             let _order = await new_order.save();
 
@@ -51,6 +68,7 @@ module.exports = {
             txn_journal.title = "Food Order";
             txn_journal.customer = req.body.customer_phone;
             txn_journal.order = _order._id;
+
 
             await txn_journal.save();
 
