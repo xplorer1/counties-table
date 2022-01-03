@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const Customer = require('../models/CustomersModel');
 const Restaurant = require('../models/RestaurantModel');
 const User = require('../models/UserModel');
@@ -12,6 +14,9 @@ const MenuModel = require('../models/MenuModel');
 const OrderModel = require('../models/OrderModel');
 const RestaurantModel = require('../models/RestaurantModel');
 
+const { deliveryGeolocationData, pickupGeolocationData } = require('../utils/geolocation');
+
+
 module.exports = {
 
     placeOrder: async function(req, res) {
@@ -20,13 +25,13 @@ module.exports = {
         if(!req.body.item_id) return res.status(400).json({status: 400, message: "item_id required."});
         if(!req.body.customer_phone) return res.status(400).json({status: 400, message: "customer_phone required."});
         if(!req.body.delivery_address) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.pickup_address) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.pickup_name) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.pickup_phone) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.pickup_email) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.delivery_name) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.delivery_phone) return res.status(400).json({status: 400, message: "delivery_address required."});
-        if(!req.body.delivery_email) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_address) return res.status(400).json({status: 400, message: "pickup_address required."});
+        if(!req.body.pickup_name) return res.status(400).json({status: 400, message: "pickup_name required."});
+        if(!req.body.pickup_phone) return res.status(400).json({status: 400, message: "pickup_phone required."});
+        if(!req.body.pickup_email) return res.status(400).json({status: 400, message: "pickup_email required."});
+        if(!req.body.delivery_name) return res.status(400).json({status: 400, message: "delivery_name required."});
+        if(!req.body.delivery_phone) return res.status(400).json({status: 400, message: "delivery_phone required."});
+        if(!req.body.delivery_email) return res.status(400).json({status: 400, message: "delivery_email required."});
         if(!req.body.restaurant_id) return res.status(400).json({status: 400, message: "restaurant_id required."});
         if(!req.body.delivery_agent) return res.status(400).json({status: 400, message: "delivery_agent required."});
 
@@ -36,6 +41,14 @@ module.exports = {
 
             let restaurant = await RestaurantModel.findOne({_id: req.body.restaurant_id}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+
+
+            // converts latitude and longitude to formatted address
+            await deliveryGeolocationData(req.body.delivery_address, req, res);
+
+            await pickupGeolocationData(req.body.pickup_address, req, res);
+
+
 
             let new_order = new OrderModel();
 
