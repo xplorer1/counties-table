@@ -27,6 +27,7 @@ var FoodOrderSchema = new Schema({
     'pickup_phone': String,
     'pickup_email': String,
     'order_status': String,
+    'api_key': String,
     'created_on' : {type: Date, default: Date.now},
 	'last_updated' : {type: Date}
 });
