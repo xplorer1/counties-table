@@ -93,7 +93,7 @@ module.exports = {
             new_order.delivery_agent = req.body.delivery_agent;
             new_order.order_cost = req.body.quantity * item.price;
             new_order.order_status = "PENDING";
-            new_order.api_key = "YfQfFSEuJlJFvCJHsPwzBSvbuglnpYc7ViD29jJreWe4mvW2DFyyVtHau3me";
+            new_order.api_key = "Jr9MmFzbycOYZdgMhR5al3PXvf9U5tUaoIWgJCqpi7EAiN4BTrAMLBpqxkmo";
 
 
             let _order = await new_order.save();
