@@ -56,7 +56,7 @@ module.exports = {
 
             //send payment and whatsapp link.
 
-            return res.status(200).json({status: 200, message: 'Order created.', payment_ref: txnref, whatsapp_link: restaurant.whatsapp_link});
+            return res.status(200).json({status: 200, message: 'Order created.', payment_ref: ref, whatsapp_link: restaurant.whatsapp_link});
 
         } catch (error) {
             return res.status(500).json({status: 500, message: error.message});
