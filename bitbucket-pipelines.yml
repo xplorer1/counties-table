@@ -1,0 +1,53 @@
+#  Template NodeJS build
+#  This template allows you to validate your NodeJS code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: node:10.15.3
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build and Test Master
+          caches:
+            - node
+          artifacts:
+            - node_modules/**
+            - .env
+            - production.tar.gz
+          script:
+            - npm install
+            - git archive --format=tar.gz master -o production.tar.gz
+      - step:
+          name: Deploy to Heroku Stream Eats Master Branch
+          deployment: production
+          script:
+            - npm install eslint
+            - pipe: atlassian/heroku-deploy:1.2.1
+              variables:
+                HEROKU_API_KEY: $HEROKU_API_KEY
+                HEROKU_APP_NAME: $HEROKU_PROD_APP_NAME
+                ZIP_FILE: 'production.tar.gz'
+
+    staging:
+      - step:
+          name: Build and Test Staging
+          caches:
+            - node
+          artifacts:
+            - node_modules/**
+            - .env
+            - staging.tar.gz
+          script:
+            - npm install
+            - git archive --format=tar.gz staging -o staging.tar.gz
+      - step:
+          name: Deploy to Heroku Stream Eats staging Branch
+          deployment: staging
+          script:
+            - npm install eslint
+            - pipe: atlassian/heroku-deploy:1.2.1
+              variables:
+                HEROKU_API_KEY: $HEROKU_API_KEY
+                HEROKU_APP_NAME: $HEROKU_COLLINS_APP_NAME
+                ZIP_FILE: 'staging.tar.gz'

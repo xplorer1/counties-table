@@ -15,7 +15,19 @@ var FoodOrderSchema = new Schema({
         ref: 'Menu'
     },
     'delivery_address' : String,
+    'delivery_latitude': String,
+    'delivery_longitude': String,
+    'pickup_address': String,
+    'pickup_latitude': String,
+    'pickup_longitude': String,
+    'delivery_name': String,
+    'delivery_phone': String,
+    'delivery_email': String,
+    'pickup_name': String,
+    'pickup_phone': String,
+    'pickup_email': String,
     'order_status': String,
+    'api_key': String,
     'created_on' : {type: Date, default: Date.now},
 	'last_updated' : {type: Date}
 });

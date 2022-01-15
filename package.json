@@ -5,21 +5,21 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "start": "nodemon local.js",
     "deploy": "serverless deploy"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://kublai1@bitbucket.org/adbasadorplus-devs/adbasador-plus-be.git"
+    "url": ""
   },
   "author": "Chijioke",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/adbasadorplus-devs/adbasador-plus-be#readme",
+  "homepage": "",
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
-    "@twilio/live-player-sdk": "^1.0.1",
     "@vonage/server-sdk": "^2.10.7-beta-2",
     "aws-sdk": "^2.896.0",
+    "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

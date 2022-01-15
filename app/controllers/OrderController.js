@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const Customer = require('../models/CustomersModel');
 const Restaurant = require('../models/RestaurantModel');
 const User = require('../models/UserModel');
@@ -12,6 +14,9 @@ const MenuModel = require('../models/MenuModel');
 const OrderModel = require('../models/OrderModel');
 const RestaurantModel = require('../models/RestaurantModel');
 
+const { deliveryGeolocationData, pickupGeolocationData } = require('../utils/geolocation');
+
+
 module.exports = {
 
     placeOrder: async function(req, res) {
@@ -20,6 +25,13 @@ module.exports = {
         if(!req.body.item_id) return res.status(400).json({status: 400, message: "item_id required."});
         if(!req.body.customer_phone) return res.status(400).json({status: 400, message: "customer_phone required."});
         if(!req.body.delivery_address) return res.status(400).json({status: 400, message: "delivery_address required."});
+        if(!req.body.pickup_address) return res.status(400).json({status: 400, message: "pickup_address required."});
+        if(!req.body.pickup_name) return res.status(400).json({status: 400, message: "pickup_name required."});
+        if(!req.body.pickup_phone) return res.status(400).json({status: 400, message: "pickup_phone required."});
+        if(!req.body.pickup_email) return res.status(400).json({status: 400, message: "pickup_email required."});
+        if(!req.body.delivery_name) return res.status(400).json({status: 400, message: "delivery_name required."});
+        if(!req.body.delivery_phone) return res.status(400).json({status: 400, message: "delivery_phone required."});
+        if(!req.body.delivery_email) return res.status(400).json({status: 400, message: "delivery_email required."});
         if(!req.body.restaurant_id) return res.status(400).json({status: 400, message: "restaurant_id required."});
         if(!req.body.delivery_agent) return res.status(400).json({status: 400, message: "delivery_agent required."});
 
@@ -30,18 +42,74 @@ module.exports = {
             let restaurant = await RestaurantModel.findOne({_id: req.body.restaurant_id}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
 
+            // converts latitude and longitude to formatted address
+       
+            
+            let pickupAddress;
+            await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+                params: {
+                    address: req.body.pickup_address,
+                    key: 'AIzaSyAQzrdUa8ws7G3WeEWdRBO6QxVjBP10gg8',
+                },
+                })
+                .then(function (response) {
+                pickupAddress = response.data.results[0].geometry.location;
+                console.log(pickupAddress)
+                })
+
+                let deliveryAddress;
+            await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+                params: {
+                    address: req.body.delivery_address,
+                    key: 'AIzaSyAQzrdUa8ws7G3WeEWdRBO6QxVjBP10gg8',
+                },
+                })
+                .then(function (response) {
+                deliveryAddress = response.data.results[0].geometry.location;
+                console.log(deliveryAddress)
+                })
+
+
             let new_order = new OrderModel();
 
+
+            new_order.order_status = "PENDING";
             new_order.quantity = req.body.quantity;
             new_order.item_id = req.body.item_id;
             new_order.customer_phone = req.body.customer_phone;
             new_order.delivery_address = req.body.delivery_address;
+            new_order.delivery_latitude = deliveryAddress.lat;
+            new_order.delivery_longitude = deliveryAddress.lng;
+            new_order.pickup_address = req.body.pickup_address;
+            new_order.pickup_latitude = pickupAddress.lat;
+            new_order.pickup_longitude = pickupAddress.lng;
+            new_order.delivery_name = req.body.delivery_name;
+            new_order.delivery_phone = req.body.delivery_phone;
+            new_order.delivery_email = req.body.delivery_email;
+            new_order.pickup_name = req.body.pickup_name;
+            new_order.pickup_phone = req.body.pickup_phone;
+            new_order.pickup_email = req.body.pickup_email;
             new_order.restaurant_id = req.body.restaurant_id;
             new_order.delivery_agent = req.body.delivery_agent;
             new_order.order_cost = req.body.quantity * item.price;
             new_order.order_status = "PENDING";
+            new_order.api_key = "Jr9MmFzbycOYZdgMhR5al3PXvf9U5tUaoIWgJCqpi7EAiN4BTrAMLBpqxkmo";
 
             let _order = await new_order.save();
+
+            var request = require('request');
+            
+            request({
+            method: 'POST',
+            url: 'https://api.gokada.ng/api/developer/order_create',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(_order)
+            }, function (error, response, body) {
+            console.log('Status:', response.statusCode);
+            console.log('Response:', body);
+            });
 
             let txn_journal = new TransactionJournal();
             var ref = uuid.v4();
@@ -56,7 +124,7 @@ module.exports = {
 
             //send payment and whatsapp link.
 
-            return res.status(200).json({status: 200, message: 'Order created.', payment_ref: txnref, whatsapp_link: restaurant.whatsapp_link});
+            return res.status(200).json({status: 200, message: 'Order created.', payment_ref: ref, whatsapp_link: restaurant.whatsapp_link});
 
         } catch (error) {
             return res.status(500).json({status: 500, message: error.message});
