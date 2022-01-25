@@ -25,12 +25,10 @@ var s3 = new AWS.S3({
 module.exports = {
 
     createMenuItem: async function(req, res) {
-        console.info("Check first ", req.body);
         try {
             let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
             console.log("file: ", req.file)
-            console.info("Check.");
 
             let file_stream = fs.createReadStream(req.file.path);
             console.log("chce")
@@ -54,7 +52,7 @@ module.exports = {
                 new_menu.price = req.body.price;
                 new_menu.menu_image = data.key;
 
-                new_menu.save();
+                await new_menu.save();
 
                 await unLinkFile(req.file.path);
                 

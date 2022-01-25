@@ -25,6 +25,7 @@ router.route('/availability')
 router.get('/restaurants', UserController.listRestaurants);
 
 router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEatsId);
+
 /**
  * Live Streaming
  */

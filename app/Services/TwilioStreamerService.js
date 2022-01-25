@@ -132,6 +132,42 @@ exports.generateStreamerToken = async (roomName, identity) => {
     }
 };
 
+const onMultipleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+        const uploads = event.target.files;
+        console.log(uploads);
+        for (let index = 0; index < uploads.length; index++) {
+            setImages((images) => [
+                ...images,
+                { image: this.getImageUrl(uploads[index]) },
+            ]);
+        }
+    }
+};
+
+const getImageUrl = (image) => {
+    if (image) {
+        const uploads = async () => {
+            const formData = new FormData();
+
+            formData.append("file", image);
+            formData.append("upload_preset", "midecodes");
+
+            const res = await fetch(
+                "https://api.cloudinary.com/v1_1/mideveloper/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+            const result = await res.json();
+            setImageUrl(result.secure_url);
+            console.log(result);
+        };
+        uploads();
+    }
+}
+
 // exports.getAudienceToken = async () => {
 //     let identity = crypto.randomBytes(20).toString('hex');
 
