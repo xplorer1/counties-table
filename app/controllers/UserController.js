@@ -5,7 +5,7 @@ const TransactionJournal = require('../models/TransactionJournal');
 const MenuModel = require('../models/MenuModel');
 const PreSignUpModel = require("../models/PreSignUpModel");
 const {successResponse, responseCode, errorResponse} = require("../utils/helpers");
-const {startStreaming, endStreaming, joinStreaming} = require("../Services/TwilioStreamerService");
+const {startStreaming, endStreaming, joinStreaming, generateStreamerToken} = require("../Services/TwilioStreamerService");
 let mailer = require("../utils/mailer");
 
 const fs = require("fs");
@@ -413,7 +413,7 @@ module.exports = {
         }
     },
 
-    joinLiveStream: async function(req, res) {
+    getAudienceToken: async function(req, res) {
         if(!req.body.identity) return res.status(400).send({ message: `Missing identity.` });
         if(!req.body.room) return res.status(400).send({ message: `Missing stream name` });
 
@@ -427,4 +427,20 @@ module.exports = {
             return res.status(500).json({message: error.message, status: 500});
         }
     },
+
+    getStreamerToken: async function(req, res) {
+        if(!req.body.identity) return res.status(400).send({ message: `Missing identity.` });
+        if(!req.body.room) return res.status(400).send({ message: `Missing stream name` });
+
+        try {
+
+            let result = await generateStreamerToken(req.body.room, req.body.identity);
+            if(!result.status) return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', data.message);
+
+            return res.status(200).json({message: "Streamer identity token.", data: result.data});
+
+        } catch (error) {
+            return res.status(500).json({message: error.message, status: 500});
+        }
+    }
 }

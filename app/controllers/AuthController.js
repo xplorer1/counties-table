@@ -131,36 +131,5 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({status: 500 ,message: error.message});
         }
-    },
-
-    /**
-     * 
-     * @param {verification_code} req object
-     * @param {object} res object
-     * @returns {object} success or error response object.
-    */
-
-    generateTwilioToken: async function(req, res) {
-        let identity = req.params.customer_phone;
-
-        // Create Video Grant
-        const videoGrant = new VideoGrant();
-
-        // Create an access token which we will sign and return to the client,
-        // containing the grant we just created
-        let token = new AccessToken(
-            twilioAccountSid,
-            twilioApiKey,
-            twilioApiSecret,
-            {identity: identity}
-        );
-
-        token.addGrant(videoGrant);
-
-        // Serialize the token to a JWT string
-
-        token = token.toJwt();
-
-        return res.status(200).json({data: token});
-    },
+    }
 }
