@@ -25,12 +25,14 @@ router.route('/availability')
 router.get('/restaurants', UserController.listRestaurants);
 
 router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEatsId);
+
 /**
  * Live Streaming
  */
 router.post('/restaurant/start_stream', UserController.startLiveStreaming);
 router.post('/restaurant/end_stream', UserController.endLiveStreaming);
-router.post('/restaurant/join_stream', UserController.joinLiveStream);
+router.post('/restaurant/audience_stream', UserController.getAudienceToken);
+router.post('/restaurant/streamer_token', UserController.getStreamerToken);
 
 router.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist' });

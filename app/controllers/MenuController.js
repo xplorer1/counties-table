@@ -52,7 +52,7 @@ module.exports = {
                 new_menu.price = req.body.price;
                 new_menu.menu_image = data.key;
 
-                new_menu.save();
+                await new_menu.save();
 
                 await unLinkFile(req.file.path);
                 
