@@ -26,9 +26,11 @@ module.exports = {
 
     createMenuItem: async function(req, res) {
         try {
-            let restaurant = await RestaurantModel.findOne({phone: req.verified.phone}).exec();
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
-            console.log("file: ", req.file)
+            console.log();
+            console.log("restaurant: ", restaurant);
+            console.log();
 
             let file_stream = fs.createReadStream(req.file.path);
             console.log("chce")
