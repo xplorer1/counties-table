@@ -33,10 +33,13 @@ module.exports = {
     "paystack_sk": "sk_test_57b1266d445ef2f7e3240d3beaaacb55aab8d097",
     "paystack_pk": "pk_test_cda22d68b0416e571c67f5e175ab72110df594fd",
 
+    //C2iB2VFQW6UTcuPidjtSn3sEgKBJARst -- secret
+    //SKb16dc3f575b35693320ad60ddb4f0029 --- sid
+
     "twilio": {
         "ACCOUNT_SID": "AC7920a12edee830d37a1a75e75d7262b5",
-        "API_KEY": "SK9fe6990dfa8c85a7d6777b96c43f001a",
-        "API_SECRET": "P28Dn1SHoGJstdyMvcJfXvlvCUGkycln"
+        "API_KEY": "SKb16dc3f575b35693320ad60ddb4f0029",
+        "API_SECRET": "C2iB2VFQW6UTcuPidjtSn3sEgKBJARst"
     },
 
     //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
