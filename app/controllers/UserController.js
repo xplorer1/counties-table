@@ -398,14 +398,15 @@ module.exports = {
     },
 
     endLiveStreaming: async function (req, res) {
-        if(!req.body.restaurantId) return errorResponse(res, responseCode.NOT_FOUND, "Restaurant ID is required.");
-        if(!req.body.restaurantName) return errorResponse(res, responseCode.NOT_FOUND,"Restaurant Name is required.");
+
+        if(!req.body.streamId) return errorResponse(res, responseCode.NOT_FOUND, "streamId is required.");
+        if(!req.body.streamName) return errorResponse(res, responseCode.NOT_FOUND,"streamName is required.");
         if(!req.body.roomId) return errorResponse(res, responseCode.NOT_FOUND,"Room ID is required.");
         if(!req.body.playerStreamerId) return errorResponse(res, responseCode.NOT_FOUND,"Player Streamer ID is required.");
         if(!req.body.mediaProcessorId) return errorResponse(res, responseCode.NOT_FOUND,"Media Processor ID is required.");
 
         try {
-            const data = await endStreaming(req.body.roomId, req.body.restaurantId, req.body.restaurantName, req.body.playerStreamerId, req.body.mediaProcessorId);
+            const data = await endStreaming(req.body.roomId, req.body.streamId, req.body.streamName, req.body.playerStreamerId, req.body.mediaProcessorId);
 
             return successResponse(res, responseCode.SUCCESS, `Restaurant ${data} Live Streaming has ended`);
         } catch (error) {
@@ -414,12 +415,10 @@ module.exports = {
     },
 
     getAudienceToken: async function(req, res) {
-        if(!req.body.identity) return res.status(400).send({ message: `Missing identity.` });
-        if(!req.body.room) return res.status(400).send({ message: `Missing stream name` });
 
         try {
-            let result = await joinStreaming(req.body.room, req.body.identity);
-            if(!result.status) return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', data.message);
+            let result = await joinStreaming();
+            if(!result.status) return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', result.message);
 
             return res.status(200).json({message: "Customer identity token.", data: result.token});
 
@@ -435,7 +434,7 @@ module.exports = {
         try {
 
             let result = await generateStreamerToken(req.body.room, req.body.identity);
-            if(!result.status) return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', data.message);
+            if(!result.status) return errorResponse(res, responseCode.INTERNAL_SERVER_ERROR, 'Server Error', result.message);
 
             return res.status(200).json({message: "Streamer identity token.", data: result.data});
 

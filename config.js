@@ -37,9 +37,9 @@ module.exports = {
     //SKb16dc3f575b35693320ad60ddb4f0029 --- sid
 
     "twilio": {
-        "ACCOUNT_SID": "AC7920a12edee830d37a1a75e75d7262b5",
-        "API_KEY": "SKb16dc3f575b35693320ad60ddb4f0029",
-        "API_SECRET": "C2iB2VFQW6UTcuPidjtSn3sEgKBJARst"
+        "ACCOUNT_SID": "AC3584b71283d6a6a4ba4f0f0a625d6a1b",
+        "API_KEY": "SK2e4f3398e4c1720e04dea135c1057936",
+        "API_SECRET": "L2HucsyyVniag0xsa2Aztga9lKAalYgZ"
     },
 
     //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

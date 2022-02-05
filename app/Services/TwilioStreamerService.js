@@ -1,10 +1,10 @@
 const twilio = require('twilio');
 const config = require('../../config');
-const {successResponse, responseCode, errorResponse} = require("../utils/helpers");
 
 const accountSid = config.twilio.ACCOUNT_SID;
 const apiKey = config.twilio.API_KEY;
 const apiKeySecret = config.twilio.API_SECRET;
+const crypto = require("crypto");
 
 const twilioClient = twilio(apiKey, apiKeySecret, { accountSid: accountSid });
 
@@ -74,26 +74,31 @@ exports.endStreaming = async (roomId, streamID, streamName, playerStreamerId, me
     }
 };
 
-exports.joinStreaming = async (roomName, identity) => {
+exports.joinStreaming = async () => {
+
+    let identity = crypto.randomBytes(20).toString('hex');
 
     try {
 
-        let videoGrant = new VideoGrant({
-            room: roomName,
+        let playerStreamerList = await twilioClient.media.playerStreamer.list({status: 'started'});
+        let playerStreamer = playerStreamerList.length ? playerStreamerList[0] : null;
+
+        // If no one is streaming, return a message
+        if (!playerStreamer) return {status: false, message: "No one is streaming right now."};
+
+        // Otherwise create an access token with a PlaybackGrant for the livestream
+        let token = new AccessToken(accountSid, apiKey, apiKeySecret);
+
+        // Create a playback grant and attach it to the access token
+        let playbackGrant = await twilioClient.media.playerStreamer(playerStreamer.sid).playbackGrant().create({ttl: 60});
+
+        let wrappedPlaybackGrant = new PlaybackGrant({
+            grant: playbackGrant.grant
         });
 
-        console.log("videoGrant: ", videoGrant);
-
-        if(!videoGrant) return {status: false, message: "Unable to instantiate video grant."};
-    
-        // Create an access token
-        let token = new AccessToken(accountSid, apiKey, apiKeySecret);
-        if(!token) return {status: false, message: "Unable to generate video token."};
-    
-        // Add the video grant and the user's identity to the token
-        token.addGrant(videoGrant);
+        token.addGrant(wrappedPlaybackGrant);
         token.identity = identity;
-    
+
         // Serialize the token to a JWT and return it to the client side
         return { token: token.toJwt(), status: true };
         
