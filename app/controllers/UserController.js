@@ -384,6 +384,7 @@ module.exports = {
     },
 
     startLiveStreaming: async function (req, res) {
+        console.log("req guys: " + req.body);
         if(!req.body.restaurantId) return errorResponse(res, responseCode.NOT_FOUND, "Restaurant ID is required.");
         if(!req.body.restaurantName) return errorResponse(res, responseCode.NOT_FOUND,"Restaurant Name is required.");
 
