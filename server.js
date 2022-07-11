@@ -43,6 +43,7 @@ let UserRoutes = require('./app/routes/UserRoutes');
 let AuthRoutes = require('./app/routes/AuthRoutes');
 let MenuRoutes = require('./app/routes/MenuRoutes');
 let MiscRoutes = require('./app/routes/MiscRoutes');
+let StreamRoutes = require('./app/routes/StreamRoutes');
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -58,6 +59,7 @@ app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/menu", MenuRoutes);
 app.use("/api/misc", MiscRoutes);
+app.use("/api/stream", StreamRoutes);
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('*', function(req, res) {
@@ -68,4 +70,9 @@ app.use(function(req, res) {
     return res.status(404).send({ message: 'The url you visited does not exist.' });
 });
 
-app.listen(config.port, () => console.log(`Magic happening on port ${config.port}!`))
+let TwilioStreamerService = require("./app/Services/TwilioStreamerService");
+
+app.listen(config.port, () => {
+    console.log(`Magic happening on port ${config.port}!`);
+    TwilioStreamerService.findExistingConfiguration();
+});

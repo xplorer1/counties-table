@@ -1,8 +1,5 @@
 const axios = require("axios");
 
-const Customer = require('../models/CustomersModel');
-const Restaurant = require('../models/RestaurantModel');
-const User = require('../models/UserModel');
 const TransactionJournal = require('../models/TransactionJournal');
 const PaystackLogModel = require("../models/PaystackLogModel");
 

@@ -4,9 +4,11 @@ const config = require('../../config');
 const accountSid = config.twilio.ACCOUNT_SID;
 const apiKey = config.twilio.API_KEY;
 const apiKeySecret = config.twilio.API_SECRET;
+const authToken = config.twilio.AUTH_TOKEN;
 const crypto = require("crypto");
 
 const twilioClient = twilio(apiKey, apiKeySecret, { accountSid: accountSid });
+const twilioServicesClient = twilio(accountSid, authToken);
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
@@ -17,16 +19,58 @@ const SYNC_SERVICE_NAME_PREFIX = "REST_";
 const SPEAKER_MAP_NAME = "SPEAKER_MAP_NAME"; //TO BE EDITED TO REFLECT SOMETHING UNIQUE.
 const RAISED_HAND_MAP_NAME = "RAISED_HAND_MAP_NAME";
 const VIEWERS_MAP_NAME = "VIEWERS_MAP_NAME";
-const CONVERSATIONS_SERVICE_SID = "CONVERSATIONS_SERVICE_SID"; // to be edited to something more unique and classy.
-const LIVE_BACKEND_STORAGE_SYNC_SERVICE = "LIVE_BACKEND_STORAGE_SYNC_SERVICE";
+let CONVERSATIONS_SERVICE_SID = ""; // to be edited to something more unique and classy.
+let LIVE_BACKEND_STORAGE_SYNC_SERVICE = "";
 const MAX_ALLOWED_SESSION_DURATION = 14400;
+const app_storage = require("../utils/nodepersist");
 
 /**
  *
  * @returns {Promise<*>}
 */
 
-exports.getStreamMapItem = async(room_sid) => {
+let createServices = async() => {
+    try {
+        let conversations_service = await twilioServicesClient.conversations.services.create({
+            friendlyName: "Twilio Live Interactive Video Conversations Service."
+        });
+        CONVERSATIONS_SERVICE_SID = conversations_service.sid;
+        app_storage.set("CONVERSATIONS_SERVICE_SID", CONVERSATIONS_SERVICE_SID);
+
+        backend_storage_sync_service = await twilioServicesClient.sync.services.create({
+            friendlyName: "Live Video Backend Storage.",
+            aclEnabled: true,
+        });
+        LIVE_BACKEND_STORAGE_SYNC_SERVICE = backend_storage_sync_service.sid;
+        app_storage.set("LIVE_BACKEND_STORAGE_SYNC_SERVICE", LIVE_BACKEND_STORAGE_SYNC_SERVICE);
+
+        backendStorageSyncClient = await twilioServicesClient.sync.services(backend_storage_sync_service.sid);
+        await backendStorageSyncClient.syncMaps.create({ uniqueName: 'streams' });
+    } catch (error) {
+    
+        console.log("error: #createServices: ", error);
+    }
+}
+
+exports.findExistingConfiguration = async() => {
+    try {
+        let service = await app_storage.get("CONVERSATIONS_SERVICE_SID");
+        console.log("services: ", service);
+
+        if(!service) {
+            createServices();
+        } else {
+            CONVERSATIONS_SERVICE_SID = app_storage.get("CONVERSATIONS_SERVICE_SID");
+            LIVE_BACKEND_STORAGE_SYNC_SERVICE = app_storage.get("LIVE_BACKEND_STORAGE_SYNC_SERVICE");
+        }
+    } catch (error) {
+        console.log("error: #findExistingConfiguration: ", error.message);
+    }
+
+    //const service = services.find((service) => service.friendlyName.includes(constants.SERVICE_NAME));
+}
+
+let getStreamMapItem = async(room_sid) => {
     const backendStorageSyncClient = await twilioClient.sync.services(LIVE_BACKEND_STORAGE_SYNC_SERVICE);
     const mapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room_sid).fetch();
     return mapItem;
@@ -192,6 +236,8 @@ exports.joinStreamAsSpeaker = async(streamID, streamName) => {
         let streamMapItem = await getStreamMapItem(room.sid);
         if(!streamMapItem) return {status: false, message: "Unable to get stream map item."};
 
+        console.log("streamMapItem##: ", streamMapItem);
+
         let streamSyncClient = twilioClient.sync.services(streamMapItem.data.sync_service_sid);
         if(!streamSyncClient) return {status: false, message: "Unable to get stream sync client."};
         
@@ -270,7 +316,7 @@ exports.startStreaming = async (streamID, streamName) => {
 
         const mediaProcessor = await twilioClient.media.mediaProcessor.create({
             extension: 'video-composer-v1',
-            maxDuration: 60 * 30,
+            maxDuration: 60 * 1, ///will only last 2 minutes
             extensionContext: JSON.stringify({
                 identity: 'video-composer-v1',
                 resolution: '1920x1080',
@@ -288,7 +334,7 @@ exports.startStreaming = async (streamID, streamName) => {
         const streamSyncService = await twilioClient.sync.services.create({
             friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid,
             aclEnabled: true,
-            //webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
+            webhookUrl: 'http://localhost:9000/api/stream/sync_web_hook',
             reachabilityWebhooksEnabled: true,
             reachabilityDebouncingEnabled: true, // To prevent disconnect event when connections are rebalanced
         });
@@ -297,19 +343,26 @@ exports.startStreaming = async (streamID, streamName) => {
         const streamSyncClient = await twilioClient.sync.services(streamSyncService.sid);
         if(!streamSyncClient) return {status: false, message: "Unable to create stream sync client."};
 
+        console.log("#1");
         const backendStorageSyncService = twilioClient.sync.services(LIVE_BACKEND_STORAGE_SYNC_SERVICE);
+        console.log("#2: ", streamSyncService.sid);
+
         if(!backendStorageSyncService) return {status: false, message: "Unable to create backend storage sync service."};
 
         await backendStorageSyncService.syncMaps('streams').syncMapItems.create({
             key: room.sid,
             data: {
                 sync_service_sid: streamSyncService.sid,
-                player_streamer_sid: playerStreamer.data.sid,
-                media_processor_sid: mediaProcessor.data.sid,
+                player_streamer_sid: playerStreamer.sid,
+                media_processor_sid: mediaProcessor.sid,
             },
         });
 
+        console.log("#3: ", streamSyncService.sid);
+
         await streamSyncClient.syncMaps.create({ uniqueName: SPEAKER_MAP_NAME });
+
+        console.log("#4: ", streamSyncService.sid);
 
         // Add the host to the speakers map when the stream is created so that:
         //
@@ -319,7 +372,10 @@ exports.startStreaming = async (streamID, streamName) => {
         // There is only one host and it is the user that creates the stream. Other users are added to
         // the speakers map in rooms-webhook when they connect to the video room.
 
+        console.log("#4.5: ", streamSyncService.sid);
         await streamSyncClient.syncMaps('speakers').syncMapItems.create({ key: streamID, data: { host: true } });
+
+        console.log("#5: ", streamSyncService.sid);
 
         // Give user read access to speakers map.
         await streamSyncClient
@@ -327,8 +383,12 @@ exports.startStreaming = async (streamID, streamName) => {
             .syncMapPermissions(streamID)
             .update({ read: true, write: false, manage: false });
 
+            console.log("#6: ", backendStorageSyncService);
+
         // Create raised hands map
         await streamSyncClient.syncMaps.create({ uniqueName: RAISED_HAND_MAP_NAME });
+
+        console.log("#7: ", backendStorageSyncService);
 
         // Give user read access to raised hands map.
         await streamSyncClient
@@ -336,8 +396,12 @@ exports.startStreaming = async (streamID, streamName) => {
             .syncMapPermissions(streamID)
             .update({ read: true, write: false, manage: false });
 
+            console.log("#8: ", backendStorageSyncService);
+
         // Create viewers map
         await streamSyncClient.syncMaps.create({ uniqueName: VIEWERS_MAP_NAME });
+
+        console.log("#9: ", backendStorageSyncService);
 
         // Give user read access to viewers map
         await streamSyncClient
@@ -345,7 +409,11 @@ exports.startStreaming = async (streamID, streamName) => {
             .syncMapPermissions(user_identity)
             .update({ read: true, write: false, manage: false });
 
+            console.log("#10: ", backendStorageSyncService);
+
         const conversationsClient = twilioClient.conversations.services(CONVERSATIONS_SERVICE_SID);
+
+        console.log("#11: ", backendStorageSyncService);
         if(!conversationsClient) return {status: false, message: "Unable to create conversation client."};
         // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
         // This helps to clean up old conversations since there is a limit that a single participant
@@ -357,22 +425,22 @@ exports.startStreaming = async (streamID, streamName) => {
 
         const token = new AccessToken(accountSid, apiKey, apiKeySecret, {
             ttl: MAX_ALLOWED_SESSION_DURATION,
-          });
+        });
         
-          // Add participant's identity to token
-          token.identity = streamID;
-        
-          // Add video grant to token
-          const videoGrant = new VideoGrant({ room: streamName });
-          token.addGrant(videoGrant);
-        
-          // Add chat grant to token
-          const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
-          token.addGrant(chatGrant);
-        
-          // Add sync grant to token
-          const syncGrant = new SyncGrant({ serviceSid: streamSyncService.sid });
-          token.addGrant(syncGrant);
+        // Add participant's identity to token
+        token.identity = streamID;
+    
+        // Add video grant to token
+        const videoGrant = new VideoGrant({ room: streamName });
+        token.addGrant(videoGrant);
+    
+        // Add chat grant to token
+        const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
+        token.addGrant(chatGrant);
+    
+        // Add sync grant to token
+        const syncGrant = new SyncGrant({ serviceSid: streamSyncService.sid });
+        token.addGrant(syncGrant);
 
         return {
             token: token.toJwt(),
@@ -397,14 +465,15 @@ exports.startStreaming = async (streamID, streamName) => {
     }
 };
 
-exports.endStreaming = async (roomId, streamID, streamName, playerStreamerId, mediaProcessorId) => {
+exports.endStreaming = async (stream_name, room_id, streamID, playerStreamerId, mediaProcessorId) => {
     try {
-        await twilioClient.media.mediaProcessor(mediaProcessorId).update({status: 'ended'});
-        await twilioClient.media.playerStreamer(playerStreamerId).update({status: 'ended'});
-        await twilioClient.video.rooms(roomId).update({status: 'completed'});
-        await twilioClient.video.rooms(streamName).update({ status: 'completed' });
+        await twilioClient.video.rooms(stream_name).update({ status: 'completed' });
 
-        return streamName;
+        //await twilioClient.media.mediaProcessor(mediaProcessorId).update({status: 'ended'});
+        //await twilioClient.media.playerStreamer(playerStreamerId).update({status: 'ended'});
+        //await twilioClient.video.rooms(room_id).update({status: 'completed'});
+
+        return {status: true, data: stream_name};
 
     } catch (error) {
         console.error(error);
