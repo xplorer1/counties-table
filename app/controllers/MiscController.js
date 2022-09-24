@@ -8,7 +8,6 @@ let imageId = function () {
 const AWS = require('aws-sdk');
 
 const config = require('../../config');
-const TransactionJournal = require('../models/TransactionJournal');
 
 var s3 = new AWS.S3({
     accessKeyId: config.aws_s3.ACCESS_KEY_ID,

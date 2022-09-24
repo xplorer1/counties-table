@@ -33,14 +33,26 @@ module.exports = {
     "paystack_sk": "sk_test_57b1266d445ef2f7e3240d3beaaacb55aab8d097",
     "paystack_pk": "pk_test_cda22d68b0416e571c67f5e175ab72110df594fd",
 
+    //C2iB2VFQW6UTcuPidjtSn3sEgKBJARst -- secret
+    //SKb16dc3f575b35693320ad60ddb4f0029 --- sid
+
     "twilio": {
-        "ACCOUNT_SID": "AC7920a12edee830d37a1a75e75d7262b5",
-        "API_KEY": "SK9fe6990dfa8c85a7d6777b96c43f001a",
-        "API_SECRET": "P28Dn1SHoGJstdyMvcJfXvlvCUGkycln"
+        "ACCOUNT_SID": "AC91f7b5284b6d42581007009f68a292f0", //"SK370f33a03289115dc918fde4dda3c2d5", //SK6ed8fc623d34d17047410e101481feb0
+        "API_KEY": "SK6ed8fc623d34d17047410e101481feb0",
+        "API_SECRET": "TXB7DxFPmjh3oTKDmvF2d8D8XWztaJlt",
+        "AUTH_TOKEN": "822510229f3e7cf0983c88a8d7696235"
     },
+
+    // "twilio": {
+    //     "ACCOUNT_SID": "AC69502ac97a2e50f79dbfcbf97dc514ef",
+    //     "API_KEY": "SK2bd8ab7658ccc49e990dd7c87f1a42f8",
+    //     "API_SECRET": "kKdpVK31pRI74df9TmY5Qm3dZeOyc7cz",
+    //     "AUTH_TOKEN": "e6ad581786f394dafba5af7f8ec79db7"
+    // },
 
     //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
     //ssh -i /Users/chijioke/death-valley/stream_eats.pem ubuntu@ec2-54-196-51-20.compute-1.amazonaws.com
+    //psd: CRStBX52rVh2w6i 
 
     //"database": "mongodb://localhost:27017/streameats", //for production
 

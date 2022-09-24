@@ -1,5 +1,4 @@
 let UserModel = require('../models/UserModel');
-let messenger = require("../utils/messenger");
 let mailer = require("../utils/mailer");
 
 let config = require('../../config');
@@ -7,15 +6,6 @@ let uuid = require('node-uuid');
 
 let jwt = require('jsonwebtoken');
 let RestaurantModel = require('../models/RestaurantModel');
-
-let AccessToken = require('twilio').jwt.AccessToken;
-let VideoGrant = AccessToken.VideoGrant;
-
-// Used when generating any kind of tokens
-// To set up environmental variables, see http://twil.io/secure
-let twilioAccountSid = config.twilio.ACCOUNT_SID;
-let twilioApiKey = config.twilio.API_KEY;
-let twilioApiSecret = config.twilio.API_SECRET;
 
 module.exports = {
 
