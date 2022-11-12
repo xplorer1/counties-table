@@ -141,7 +141,7 @@ module.exports = {
 
     listRestaurants: async function(req, res) {
         try {
-            let restaurants = await RestaurantModel.find({}).exec();
+            let restaurants = await RestaurantModel.find({visibility_status: "open"}).exec();
             return res.status(200).json({data: restaurants, status: 200});
         } catch (error) {
             return res.status(500).json({
@@ -166,6 +166,40 @@ module.exports = {
 
         } catch (error) {
             return res.status(500).json({ message: error.message, status: 500 });
+        }
+    },
+
+    toggleVisibilityStatus: async function(req, res) {
+        try {
+            let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
+            if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});
+
+            let menu_items = await MenuModel.find({restaurant: restaurant._id}).exec();
+            if(!menu_items.length) return res.status(400).json({status: false, message: "You do not have a menu."});
+
+            let status = restaurant.visibility_status === "open" ? "closed" : "open";
+
+            restaurant["visibility_status"] = status;
+            await restaurant.save();
+
+            return res.status(200).json({message: "Visibility status updated."});
+
+        } catch (error) {
+            return res.status(500).json({ message: error.message, status: 500 });
+        }
+    },
+
+    listClosedRestaurants: async function(req, res) {
+        try {
+            
+            let restaurants = await RestaurantModel.find({visibility_status: "closed"}).exec();
+            return res.status(200).json({data: restaurants, status: 200});
+
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message,
+                status: 500
+            });
         }
     },
 
@@ -229,7 +263,6 @@ module.exports = {
     },
 
     getRestaurant: async function(req, res) {
-        console.log("verified: ", req.verified)
         try {
             let restaurant = await RestaurantModel.findOne({email: req.verified.email}).exec();
             if(!restaurant) return res.status(404).json({status: 404, message: 'Restaurant not found.'});

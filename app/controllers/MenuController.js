@@ -38,11 +38,7 @@ module.exports = {
             };
 
             s3.upload(params, async function(err, data) {
-                if (err) {
-                    return res.status(500).json({status: 500, message: err.message});
-                }
-
-                console.log("data: ', ", data);
+                if (err) return res.status(500).json({status: 500, message: err.message});
 
                 let new_menu = new MenuModel();
                 new_menu.description = req.body.description;
@@ -51,8 +47,14 @@ module.exports = {
                 new_menu.menu_image = data.key;
 
                 await new_menu.save();
-
                 await unLinkFile(req.file.path);
+
+                let menu_items = await MenuModel.find({restaurant: restaurant._id}).exec();
+
+                if(restaurant.visibility_status === "closed" && menu_items.length === 0) {
+                    restaurant.visibility_status = "open";
+                    await restaurant.save();
+                }
                 
                 return res.status(200).json({message: "Menu item created successfully."});
             });
