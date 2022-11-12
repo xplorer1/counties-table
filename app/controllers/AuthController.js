@@ -57,9 +57,6 @@ module.exports = {
         if(!req.body.verification_code) return res.status(400).json({status: 400, message: "Code is required."});
         if(!req.body.email) return res.status(400).json({status: 400, message: "Email is required."});
 
-        console.log("vcode: ", req.body.verification_code);
-        console.log("email: ", req.body.email);
-
         try {
             let user = await UserModel.findOne({verification_code: req.body.verification_code.trim().toUpperCase(), email: req.body.email}).exec();
             if(!user) return res.status(404).json({status: 404, message: "Code invalid."});
@@ -109,8 +106,6 @@ module.exports = {
             user.last_login = new Date();
 
             user.save();
-
-            console.log("user: ", user);
 
             var token = jwt.sign({phone: user.phone, email: req.body.email}, config.secret, {
                 expiresIn: 432000 // expires in 5 days

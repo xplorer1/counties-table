@@ -23,9 +23,8 @@ router.route('/availability')
     .get(UserController.listLiveRestaurants);
 
 router.route('/visibility_status')
-    .post(middlewares.checkToken, UserController.toggleVisibilityStatus)
-    .get(UserController.listClosedRestaurants);
-
+    .post(middlewares.checkToken, UserController.toggleVisibilityStatus);
+    
 router.get('/restaurants', UserController.listRestaurants);
 
 router.get('/restaurant/:streameats_id', UserController.getRestaurantByStreamEatsId);
