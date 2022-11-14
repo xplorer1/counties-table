@@ -71,10 +71,10 @@ module.exports = {
         let {page = 1, limit = 10} = req.query;
 
         try {
-            let menu_items = await MenuModel.find({restaurant: req.params.restaurant}).limit(limit * 1).skip((page - 1) * limit).exec();
-            let count = await MenuModel.countDocuments({restaurant: req.params.restaurant}).exec();
+            let menu_items = await MenuModel.find({restaurant: req.params.restaurant}).exec();
+            //let count = await MenuModel.countDocuments({restaurant: req.params.restaurant}).exec();
 
-            return res.status(200).json({status:true, data: menu_items, total_pages: Math.ceil(count / limit), current_page: page, elements: count});
+            return res.status(200).json({status:true, data: menu_items});
         } catch (error) {
             return res.status(500).json({
                 message: error.message,

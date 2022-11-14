@@ -143,10 +143,10 @@ module.exports = {
         let {page = 1, limit = 10, status = "open"} = req.query;
 
         try {
-            let restaurants = await RestaurantModel.find({visibility_status: status}).limit(limit * 1).skip((page - 1) * limit).exec();
-            let count = await RestaurantModel.countDocuments({visibility_status: status}).exec();
+            let restaurants = await RestaurantModel.find({visibility_status: status}).exec();
+            //let count = await RestaurantModel.countDocuments({visibility_status: status}).exec();
 
-            return res.status(200).json({status:true, data: restaurants, total_pages: Math.ceil(count / limit), current_page: page, elements: count});
+            return res.status(200).json({status:true, data: restaurants});
         } catch (error) {
             return res.status(500).json({
                 message: error.message,
@@ -197,10 +197,10 @@ module.exports = {
         let {page = 1, limit = 10, status = "online"} = req.query;
 
         try {
-            let online_restaurants = await RestaurantModel.find({is_live: status}).limit(limit * 1).skip((page - 1) * limit).exec();
-            let count = await RestaurantModel.countDocuments({is_live: status}).exec();
+            let online_restaurants = await RestaurantModel.find({is_live: status}).exec();
+            //let count = await RestaurantModel.countDocuments({is_live: status}).exec();
 
-            return res.status(200).json({status:true, data: online_restaurants, total_pages: Math.ceil(count / limit), current_page: page, elements: count});
+            return res.status(200).json({status:true, data: online_restaurants});
 
         } catch (error) {
             return res.status(500).json({ message: error.message, status: 500 });
